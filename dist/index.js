@@ -14,16 +14,19 @@ var generateId = function generateId() {
 var container = function container(lookup, scopeName, resolveFromParent) {
   var resources = [];
   var instances = [];
+  var thisContainer = undefined;
 
   function create(entry) {
-    var args = undefined;
+    var args = [];
     if (entry.args !== undefined) {
-      args = {};
+      var argsObj = {};
       for (var key in entry.args) {
-        args[key] = _resolve(entry.args[key]);
+        argsObj[key] = _resolve(entry.args[key]);
       }
+      args.push(argsObj);
     }
-    var instance = entry.factory(args);
+    args.push(thisContainer);
+    var instance = entry.factory.apply(entry, args);
     var disposer = entry.disposer;
     if (disposer !== undefined) {
       resources.push(function () {
@@ -132,7 +135,7 @@ var container = function container(lookup, scopeName, resolveFromParent) {
     delete lookup[key];
   }
 
-  return {
+  return thisContainer = {
     resolve: function resolve(keyOrBuilder) {
       return _resolve(keyOrBuilder, resources);
     },

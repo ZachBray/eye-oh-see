@@ -4,16 +4,19 @@ const generateId = () => nextId++;
 const container = (lookup, scopeName, resolveFromParent) => {
   let resources = [];
   let instances = [];
+  let thisContainer;
 
   function create(entry) {
-    let args;
+    const args = [];
     if (entry.args !== undefined) {
-      args = {};
+      const argsObj = {};
       for(var key in entry.args) {
-        args[key] = resolve(entry.args[key]);
+        argsObj[key] = resolve(entry.args[key]);
       }
+      args.push(argsObj);
     }
-    const instance = entry.factory(args);
+    args.push(thisContainer);
+    const instance = entry.factory(...args);
     const disposer = entry.disposer;
     if (disposer !== undefined) {
       resources.push(() => disposer(instance));
@@ -112,7 +115,7 @@ const container = (lookup, scopeName, resolveFromParent) => {
     delete lookup[key];
   }
 
-  return {
+  return thisContainer = {
     resolve: keyOrBuilder => resolve(keyOrBuilder, resources),
     bind, unbind, resolveMany, createScope, dispose
   };
