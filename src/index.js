@@ -89,6 +89,7 @@ const container = (lookup, scopeName, resolveFromParent) => {
         entry.key = key;
         const entries = lookup[key] || (lookup[key] = []);
         entries.push(entry);
+        return builder;
       },
       perScope: scopeName => {
         entry.scope = scopeName;
