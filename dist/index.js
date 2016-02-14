@@ -109,6 +109,7 @@ var container = function container(lookup, scopeName, resolveFromParent) {
         entry.key = key;
         var entries = lookup[key] || (lookup[key] = []);
         entries.push(entry);
+        return builder;
       },
       perScope: function perScope(scopeName) {
         entry.scope = scopeName;
