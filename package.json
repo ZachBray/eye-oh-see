@@ -1,16 +1,16 @@
 {
-  "name": "PROJECT",
+  "name": "EyeOhSee",
   "version": "0.0.0",
   "main": "dist/index.js",
   "scripts": {
     "clean": "rimraf dist",
-    "test": "./node_modules/.bin/mocha --compilers js:babel-register --recursive",
-    "test:watch": "./node_modules/.bin/mocha --compilers js:babel-register --recursive --watch",
+    "test": "mocha --compilers js:babel-core/register --recursive",
+    "test:watch": "mocha --compilers js:babel-register --recursive --watch",
     "typecheck": "flow",
-    "lint": "./node_modules/.bin/eslint src test examples",
+    "lint": "eslint src test examples",
     "check": "npm run lint && npm run typecheck && npm run test",
     "prebuild": "npm run clean && npm run check",
-    "build": "./node_modules/.bin/babel src --out-dir dist"
+    "build": "babel src --out-dir dist"
   },
   "devDependencies": {
     "babel": "^6.5.1",
