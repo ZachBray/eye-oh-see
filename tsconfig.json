@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+      "target": "ES5",
+      "outDir": "./dist",
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true
+    },
+    "exclude": [
+      "node_modules",
+      "dist",
+      "typings/main.d.ts",
+      "typings/main"
+    ]
+}
