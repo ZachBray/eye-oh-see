@@ -105,4 +105,30 @@ describe('Container', () => {
     expect(barInstanceCount).to.equal(1);
     expect(bazInstanceCount).to.equal(2);
   });
+
+  it('should resolve registered instances rather than constructing new instances', () => {
+    // Arrange
+    let instanceCount = 0;
+    @Transient()
+    class Foo {
+      constructor() {
+        ++instanceCount;
+      }
+    }
+    const instanceA = new Foo();
+    sut.registerInstance(Foo, instanceA);
+    // Act
+    const instanceB = sut.resolve(Foo);
+    // Assert
+    expect(instanceB instanceof Foo).to.be.true;
+    expect(instanceCount).to.equal(1);
+    expect(instanceA).to.equal(instanceB);
+  });
+
+  // TODO:
+  // Arrays/sequences
+  // Child containers
+  // Factories
+  // Disposal of resources
+  // Multiple container instances (i.e., fix usage of essentially static metadata).
 });

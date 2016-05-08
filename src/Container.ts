@@ -3,18 +3,18 @@ import 'reflect-metadata';
 
 const IOC_METADATA_KEY = 'ioc:metadata';
 
-interface IConstructionStrategy {
+interface IInstanceFactory {
   construct(metadata: Metadata): any;
 }
 
-class TransientConstructionStrategy implements IConstructionStrategy {
+class PerResolutionInstanceFactory implements IInstanceFactory {
   construct(metadata: Metadata): any {
     const args = metadata.dependencies.map(d => d.resolve());
     return new metadata.factory(...args);
   }
 }
 
-class SingletonConstructionStrategy implements IConstructionStrategy {
+class SingletonInstanceFactory implements IInstanceFactory {
   private hasConstructedInstance = false;
   private constructedInstance;
 
@@ -28,6 +28,14 @@ class SingletonConstructionStrategy implements IConstructionStrategy {
   }
 }
 
+class RegisteredInstanceFactory implements IInstanceFactory {
+  constructor(private instance: any) {}
+
+  construct(metadata: Metadata): any {
+    return this.instance;
+  }
+}
+
 class FriendlyNameFactory {
   public static create(factory) {
     return factory.name || factory;
@@ -37,14 +45,14 @@ class FriendlyNameFactory {
 
 class Metadata {
   public dependencies: Metadata[] = [];
-  public constructionStrategy: IConstructionStrategy = new TransientConstructionStrategy();
+  public instanceFactory: IInstanceFactory = new PerResolutionInstanceFactory();
   public implementations: Metadata[] = [];
 
   constructor(public factory) {}
 
   public resolve(): any {
     if (this.implementations.length === 0) {
-      return this.constructionStrategy.construct(this);
+      return this.instanceFactory.construct(this);
     } else if (this.implementations.length === 1) {
       return this.implementations[0].resolve();
     } else {
@@ -65,9 +73,9 @@ class MetadataFactory {
     return metadata;
   }
 
-  public static createLifetimeService(factory: Function, constructionStrategy: IConstructionStrategy, service?: Function) {
+  public static createLifetimeService(factory: Function, constructionStrategy: IInstanceFactory, service?: Function) {
     const metadata = MetadataFactory.create(factory);
-    metadata.constructionStrategy = constructionStrategy;
+    metadata.instanceFactory = constructionStrategy;
     if (service != null) {
       const serviceMetadata = MetadataFactory.create(service);
       serviceMetadata.implementations.push(metadata);
@@ -82,22 +90,27 @@ class MetadataFactory {
 }
 
 export class Container {
-  resolve<TService>(factory: new (...args) => TService): TService {
+  resolve<TService>(factory: {new (...args): TService}): TService {
     const metadata = MetadataFactory.create(factory);
     return <TService> metadata.resolve();
   }
+
+  registerInstance<TImpl extends TService, TService>(service: {new (...args):  TService}, instance: TImpl) {
+    const metadata = MetadataFactory.create(service);
+    metadata.instanceFactory = new RegisteredInstanceFactory(instance);
+  }
 }
 
-export function Register(constructionStrategy: IConstructionStrategy, service?: Function) {
+export function Register(constructionStrategy: IInstanceFactory, service?: Function) {
   return function (target: Function) {
     MetadataFactory.createLifetimeService(target, constructionStrategy, service);
   };
 }
 
 export function Singleton(service?: Function) {
-  return Register(new SingletonConstructionStrategy(), service);
+  return Register(new SingletonInstanceFactory(), service);
 }
 
 export function Transient(service?: Function) {
-  return Register(new TransientConstructionStrategy(), service);
+  return Register(new PerResolutionInstanceFactory(), service);
 }
