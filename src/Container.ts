@@ -6,7 +6,7 @@ const IOC_METADATA_KEY = 'ioc:metadata';
 class ContainerData {
   private resources: (() => void)[] = [];
 
-  public trackResources(metadata: Metadata, instance: any) {
+  public trackResources(metadata: TypeMetadata, instance: any) {
     if (metadata.disposalFunction != null) {
       this.resources.push(() => metadata.disposalFunction(instance));
     }
@@ -19,11 +19,11 @@ class ContainerData {
 }
 
 interface IInstanceFactory {
-  create(metadata: Metadata, data: ContainerData): any;
+  create(metadata: TypeMetadata, data: ContainerData): any;
 }
 
 class PerResolutionInstanceFactory implements IInstanceFactory {
-  create(metadata: Metadata, data: ContainerData): any {
+  create(metadata: TypeMetadata, data: ContainerData): any {
     const args = metadata.dependencies.map(d => d(data));
     const instance = new metadata.factory(...args);
     data.trackResources(metadata, instance);
@@ -35,7 +35,7 @@ class SingletonInstanceFactory implements IInstanceFactory {
   private hasConstructedInstance = false;
   private constructedInstance;
 
-  create(metadata: Metadata, data: ContainerData): any {
+  create(metadata: TypeMetadata, data: ContainerData): any {
     if (!this.hasConstructedInstance) {
       const args = metadata.dependencies.map(d => d(data));
       this.constructedInstance = new metadata.factory(...args);
@@ -49,7 +49,7 @@ class SingletonInstanceFactory implements IInstanceFactory {
 class RegisteredInstanceFactory implements IInstanceFactory {
   constructor(private instance: any) {}
 
-  create(metadata: Metadata, data: ContainerData): any {
+  create(metadata: TypeMetadata, data: ContainerData): any {
     return this.instance;
   }
 }
@@ -61,11 +61,11 @@ class FriendlyNameFactory {
 }
 
 interface IInstanceResolver {
-  resolve(metadata: Metadata, data: ContainerData): any;
+  resolve(metadata: TypeMetadata, data: ContainerData): any;
 }
 
 class SingleInstanceResolver implements IInstanceResolver {
-  resolve(metadata: Metadata, data: ContainerData): any {
+  resolve(metadata: TypeMetadata, data: ContainerData): any {
     if (metadata.implementations.length === 0) {
       return metadata.instanceFactory.create(metadata, data);
     } else if (metadata.implementations.length === 1) {
@@ -80,22 +80,22 @@ class SingleInstanceResolver implements IInstanceResolver {
 class ArrayResolver implements IInstanceResolver {
   private resolver = new SingleInstanceResolver();
 
-  resolve(metadata: Metadata, data: ContainerData): any {
+  resolve(metadata: TypeMetadata, data: ContainerData): any {
     return metadata.implementations.map(impl => this.resolver.resolve(impl, data));
   }
 }
 
-class Metadata {
+class TypeMetadata {
   public dependencies: ((data: ContainerData) => any)[] = [];
   public instanceFactory: IInstanceFactory = new PerResolutionInstanceFactory();
-  public implementations: Metadata[] = [];
+  public implementations: TypeMetadata[] = [];
   public disposalFunction: (instance: any) => void = null;
 
   constructor(public factory) {
     this.findDependencies();
   }
 
-  public implementedBy(implementation: Metadata) {
+  public implementedBy(implementation: TypeMetadata) {
     this.implementations.push(implementation);
   }
 
@@ -112,12 +112,12 @@ class Metadata {
 }
 
 class MetadataFactory {
-  public static create(factory: Function): Metadata {
-    const existingMetadata = <Metadata> Reflect.getMetadata(IOC_METADATA_KEY, factory);
+  public static create(factory: Function): TypeMetadata {
+    const existingMetadata = <TypeMetadata> Reflect.getMetadata(IOC_METADATA_KEY, factory);
     if (existingMetadata != null) {
       return existingMetadata;
     }
-    const metadata = new Metadata(factory);
+    const metadata = new TypeMetadata(factory);
     Reflect.defineMetadata(IOC_METADATA_KEY, metadata, factory);
     return metadata;
   }
@@ -153,15 +153,15 @@ export function Register(constructionStrategy: IInstanceFactory, service?: Funct
   };
 }
 
-export function Singleton(service?: Function) {
+export function SingleInstance(service?: Function) {
   return Register(new SingletonInstanceFactory(), service);
 }
 
-export function Transient(service?: Function) {
+export function InstancePerDependency(service?: Function) {
   return Register(new PerResolutionInstanceFactory(), service);
 }
 
-export function Many(service: Function) {
+export function ArrayOf(service: Function) {
   return function(target: Function, key: string, index: number) {
     const metadata = MetadataFactory.create(target);
     const resolver = new ArrayResolver();

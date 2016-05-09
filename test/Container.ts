@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {Container, Singleton, Transient, Many, Factory, Disposable} from '../src/Container';
+import {Container, SingleInstance, InstancePerDependency, ArrayOf, Factory, Disposable} from '../src/Container';
 const expect = chai.expect;
 
 describe('Container', () => {
@@ -12,7 +12,7 @@ describe('Container', () => {
   it('should return a new instance when resolving a transient entry', () => {
     // Arrange
     let instanceCount = 0;
-    @Transient()
+    @InstancePerDependency()
     class Foo {
       constructor() {
         ++instanceCount;
@@ -28,7 +28,7 @@ describe('Container', () => {
   it('should construct a new instance for each resolution of a transient entry', () => {
     // Arrange
     let instanceCount = 0;
-    @Transient()
+    @InstancePerDependency()
     class Foo {
       constructor() {
         ++instanceCount;
@@ -47,7 +47,7 @@ describe('Container', () => {
   it('should resolve implementation registered for service when resolving', () => {
     // Arrange
     class IAnimal {}
-    @Transient(IAnimal)
+    @InstancePerDependency(IAnimal)
     class Dog {}
     // Arrange
     const instance = sut.resolve(IAnimal);
@@ -58,7 +58,7 @@ describe('Container', () => {
   it('should only construct one instance of a singleton entry', () => {
     // Arrange
     let instanceCount = 0;
-    @Singleton()
+    @SingleInstance()
     class Foo {
       constructor() {
         ++instanceCount;
@@ -76,9 +76,9 @@ describe('Container', () => {
 
   it('should resolve parameters when resolving an instance', () => {
     // Arrange
-    @Transient()
+    @InstancePerDependency()
     class Bar {}
-    @Transient()
+    @InstancePerDependency()
     class Foo {
       constructor(public bar: Bar) {}
     }
@@ -93,19 +93,19 @@ describe('Container', () => {
     // Arrange
     let barInstanceCount = 0;
     let bazInstanceCount = 0;
-    @Singleton()
+    @SingleInstance()
     class Bar {
       constructor() {
         ++barInstanceCount;
       }
     }
-    @Transient()
+    @InstancePerDependency()
     class Baz {
       constructor() {
         ++bazInstanceCount;
       }
     }
-    @Transient()
+    @InstancePerDependency()
     class Foo {
       constructor(public bar: Bar, public baz: Baz) {}
     }
@@ -120,7 +120,7 @@ describe('Container', () => {
   it('should resolve registered instances rather than constructing new instances', () => {
     // Arrange
     let instanceCount = 0;
-    @Transient()
+    @InstancePerDependency()
     class Foo {
       constructor() {
         ++instanceCount;
@@ -139,13 +139,13 @@ describe('Container', () => {
   it('should resolve all registrations for a service when resolving an array', () => {
     // Arrange
     class IAnimal {}
-    @Transient(IAnimal)
+    @InstancePerDependency(IAnimal)
     class Dog implements IAnimal {}
-    @Transient(IAnimal)
+    @InstancePerDependency(IAnimal)
     class Cat implements IAnimal {}
-    @Transient()
+    @InstancePerDependency()
     class Zoo {
-      constructor(@Many(IAnimal) public animals: IAnimal[]) {}
+      constructor(@ArrayOf(IAnimal) public animals: IAnimal[]) {}
     }
     // Act
     const instance = sut.resolve(Zoo);
@@ -159,17 +159,17 @@ describe('Container', () => {
     // Arrange
     let dogInstanceCount = 0;
     class IAnimal {}
-    @Singleton(IAnimal)
+    @SingleInstance(IAnimal)
     class Dog implements IAnimal {
       constructor() {
         ++dogInstanceCount;
       }
     }
-    @Transient(IAnimal)
+    @InstancePerDependency(IAnimal)
     class Cat implements IAnimal {}
-    @Transient()
+    @InstancePerDependency()
     class Zoo {
-      constructor(@Many(IAnimal) public animals: IAnimal[]) {}
+      constructor(@ArrayOf(IAnimal) public animals: IAnimal[]) {}
     }
     // Act
     sut.resolve(Zoo);
@@ -180,9 +180,9 @@ describe('Container', () => {
 
   it('should inject factories where the factory attribute is used', () => {
     // Arrange
-    @Transient()
+    @InstancePerDependency()
     class Foo {}
-    @Transient()
+    @InstancePerDependency()
     class Bar {
       public a: Foo;
       public b: Foo;
@@ -202,13 +202,13 @@ describe('Container', () => {
   it('should respect the lifetime registrations when resolving through factories', () => {
     // Arrange
     let instanceCount = 0;
-    @Singleton()
+    @SingleInstance()
     class Foo {
       constructor() {
         ++instanceCount;
       }
     }
-    @Transient()
+    @InstancePerDependency()
     class Bar {
       public a: Foo;
       public b: Foo;
@@ -226,7 +226,7 @@ describe('Container', () => {
   it('should dispose of transient resources when the container is disposed', () => {
     // Arrange
     let disposeCount = 0;
-    @Transient()
+    @InstancePerDependency()
     @Disposable()
     class Foo {
       public dispose() {
@@ -244,7 +244,7 @@ describe('Container', () => {
   it('should dispose of singleton resources when the container is disposed', () => {
     // Arrange
     let disposeCount = 0;
-    @Singleton()
+    @SingleInstance()
     @Disposable()
     class Foo {
       public dispose() {
@@ -262,14 +262,14 @@ describe('Container', () => {
   it('should dispose of resources created through factories when the container is disposed', () => {
     // Arrange
     let disposeCount = 0;
-    @Transient()
+    @InstancePerDependency()
     @Disposable()
     class Foo {
       public dispose() {
         ++disposeCount;
       }
     }
-    @Transient()
+    @InstancePerDependency()
     class FooFactory {
       constructor(@Factory(Foo) private factory: () => Foo) {}
 
@@ -287,6 +287,8 @@ describe('Container', () => {
   });
 
   // TODO:
+  // Generics
   // Child containers
+  // Factories that take parameters
   // Multiple container instances (i.e., fix usage of essentially static metadata).
 });
