@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {Container, SingleInstance, InstancePerDependency, ArrayOf, Factory, Disposable} from '../src/Container';
+import {Container, SingleInstance, InstancePerDependency, ArrayOf, Factory, Disposable} from '../src/Index';
 const expect = chai.expect;
 
 describe('Container', () => {
@@ -18,6 +18,7 @@ describe('Container', () => {
         ++instanceCount;
       }
     }
+    sut.register(Foo);
     // Act
     const instance = sut.resolve(Foo);
     // Assert
@@ -35,6 +36,7 @@ describe('Container', () => {
       }
     }
     // Act
+    sut.register(Foo);
     const instanceA =  sut.resolve(Foo);
     const instanceB =  sut.resolve(Foo);
     // Assert
@@ -49,6 +51,8 @@ describe('Container', () => {
     class IAnimal {}
     @InstancePerDependency(IAnimal)
     class Dog {}
+    sut.register(IAnimal);
+    sut.register(Dog);
     // Arrange
     const instance = sut.resolve(IAnimal);
     // Assert
@@ -64,6 +68,7 @@ describe('Container', () => {
         ++instanceCount;
       }
     }
+    sut.register(Foo);
     // Act
     const instanceA = sut.resolve(Foo);
     const instanceB = sut.resolve(Foo);
@@ -82,6 +87,8 @@ describe('Container', () => {
     class Foo {
       constructor(public bar: Bar) {}
     }
+    sut.register(Bar);
+    sut.register(Foo);
     // Act
     const instance = sut.resolve(Foo);
     // Assert
@@ -109,6 +116,9 @@ describe('Container', () => {
     class Foo {
       constructor(public bar: Bar, public baz: Baz) {}
     }
+    sut.register(Foo);
+    sut.register(Bar);
+    sut.register(Baz);
     // Act
     sut.resolve(Foo);
     sut.resolve(Foo);
@@ -127,7 +137,7 @@ describe('Container', () => {
       }
     }
     const instanceA = new Foo();
-    sut.registerInstance(Foo, instanceA);
+    sut.register(Foo).resetResolutionStrategy().providedInstance(instanceA);
     // Act
     const instanceB = sut.resolve(Foo);
     // Assert
@@ -147,6 +157,10 @@ describe('Container', () => {
     class Zoo {
       constructor(@ArrayOf(IAnimal) public animals: IAnimal[]) {}
     }
+    sut.register(IAnimal);
+    sut.register(Dog);
+    sut.register(Cat);
+    sut.register(Zoo);
     // Act
     const instance = sut.resolve(Zoo);
     // Assert
@@ -171,6 +185,10 @@ describe('Container', () => {
     class Zoo {
       constructor(@ArrayOf(IAnimal) public animals: IAnimal[]) {}
     }
+    sut.register(IAnimal);
+    sut.register(Dog);
+    sut.register(Cat);
+    sut.register(Zoo);
     // Act
     sut.resolve(Zoo);
     sut.resolve(Zoo);
@@ -191,6 +209,8 @@ describe('Container', () => {
         this.b = factory();
       }
     }
+    sut.register(Foo);
+    sut.register(Bar);
     // Act
     const instance = sut.resolve(Bar);
     // Arrange
@@ -217,6 +237,8 @@ describe('Container', () => {
         this.b = factory();
       }
     }
+    sut.register(Foo);
+    sut.register(Bar);
     // Act
     sut.resolve(Bar);
     // Arrange
@@ -233,6 +255,7 @@ describe('Container', () => {
         ++disposeCount;
       }
     }
+    sut.register(Foo);
     sut.resolve(Foo);
     sut.resolve(Foo);
     // Act
@@ -251,6 +274,7 @@ describe('Container', () => {
         ++disposeCount;
       }
     }
+    sut.register(Foo);
     sut.resolve(Foo);
     sut.resolve(Foo);
     // Act
@@ -277,6 +301,8 @@ describe('Container', () => {
         return this.factory();
       }
     }
+    sut.register(Foo);
+    sut.register(FooFactory);
     const factory = sut.resolve(FooFactory);
     factory.create();
     factory.create();
