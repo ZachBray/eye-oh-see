@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {Container, Singleton, Transient} from '../src/Container';
+import {Container, Singleton, Transient, Many} from '../src/Container';
 const expect = chai.expect;
 
 describe('Container', () => {
@@ -42,6 +42,17 @@ describe('Container', () => {
     expect(instanceB instanceof Foo).to.be.true;
     expect(instanceCount).to.equal(2);
     expect(instanceA).to.not.equal(instanceB);
+  });
+
+  it('should resolve implementation registered for service when resolving', () => {
+    // Arrange
+    class IAnimal {}
+    @Transient(IAnimal)
+    class Dog {}
+    // Arrange
+    const instance = sut.resolve(IAnimal);
+    // Assert
+    expect(instance instanceof Dog).to.be.true;
   });
 
   it('should only construct one instance of a singleton entry', () => {
@@ -125,8 +136,49 @@ describe('Container', () => {
     expect(instanceA).to.equal(instanceB);
   });
 
+  it('should resolve all registrations for a service when resolving an array', () => {
+    // Arrange
+    class IAnimal {}
+    @Transient(IAnimal)
+    class Dog implements IAnimal {}
+    @Transient(IAnimal)
+    class Cat implements IAnimal {}
+    @Transient()
+    class Zoo {
+      constructor(@Many(IAnimal) public animals: IAnimal[]) {}
+    }
+    // Act
+    const instance = sut.resolve(Zoo);
+    // Assert
+    expect(instance.animals.length).to.equal(2);
+    expect(instance.animals[0] instanceof Dog).to.be.true;
+    expect(instance.animals[1] instanceof Cat).to.be.true;
+  });
+
+  it('should respect lifetime registrations when resolving arrays', () => {
+    // Arrange
+    let dogInstanceCount = 0;
+    class IAnimal {}
+    @Singleton(IAnimal)
+    class Dog implements IAnimal {
+      constructor() {
+        ++dogInstanceCount;
+      }
+    }
+    @Transient(IAnimal)
+    class Cat implements IAnimal {}
+    @Transient()
+    class Zoo {
+      constructor(@Many(IAnimal) public animals: IAnimal[]) {}
+    }
+    // Act
+    sut.resolve(Zoo);
+    sut.resolve(Zoo);
+    // Assert
+    expect(dogInstanceCount).to.equal(1);
+  });
+
   // TODO:
-  // Arrays/sequences
   // Child containers
   // Factories
   // Disposal of resources
