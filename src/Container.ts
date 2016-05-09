@@ -3,14 +3,31 @@ import 'reflect-metadata';
 
 const IOC_METADATA_KEY = 'ioc:metadata';
 
+class ContainerData {
+  private resources: (() => void)[] = [];
+
+  public trackResources(metadata: Metadata, instance: any) {
+    if (metadata.disposalFunction != null) {
+      this.resources.push(() => metadata.disposalFunction(instance));
+    }
+  }
+
+  public dispose() {
+    this.resources.forEach(dispose => dispose());
+    this.resources = [];
+  }
+}
+
 interface IInstanceFactory {
-  create(metadata: Metadata): any;
+  create(metadata: Metadata, data: ContainerData): any;
 }
 
 class PerResolutionInstanceFactory implements IInstanceFactory {
-  create(metadata: Metadata): any {
-    const args = metadata.dependencies.map(d => d());
-    return new metadata.factory(...args);
+  create(metadata: Metadata, data: ContainerData): any {
+    const args = metadata.dependencies.map(d => d(data));
+    const instance = new metadata.factory(...args);
+    data.trackResources(metadata, instance);
+    return instance;
   }
 }
 
@@ -18,10 +35,11 @@ class SingletonInstanceFactory implements IInstanceFactory {
   private hasConstructedInstance = false;
   private constructedInstance;
 
-  create(metadata: Metadata): any {
+  create(metadata: Metadata, data: ContainerData): any {
     if (!this.hasConstructedInstance) {
-      const args = metadata.dependencies.map(d => d());
+      const args = metadata.dependencies.map(d => d(data));
       this.constructedInstance = new metadata.factory(...args);
+      data.trackResources(metadata, this.constructedInstance);
       this.hasConstructedInstance = true;
     }
     return this.constructedInstance;
@@ -31,7 +49,7 @@ class SingletonInstanceFactory implements IInstanceFactory {
 class RegisteredInstanceFactory implements IInstanceFactory {
   constructor(private instance: any) {}
 
-  create(metadata: Metadata): any {
+  create(metadata: Metadata, data: ContainerData): any {
     return this.instance;
   }
 }
@@ -43,15 +61,15 @@ class FriendlyNameFactory {
 }
 
 interface IInstanceResolver {
-  resolve(metadata: Metadata): any;
+  resolve(metadata: Metadata, data: ContainerData): any;
 }
 
 class SingleInstanceResolver implements IInstanceResolver {
-  resolve(metadata: Metadata): any {
+  resolve(metadata: Metadata, data: ContainerData): any {
     if (metadata.implementations.length === 0) {
-      return metadata.instanceFactory.create(metadata);
+      return metadata.instanceFactory.create(metadata, data);
     } else if (metadata.implementations.length === 1) {
-      return this.resolve(metadata.implementations[0]);
+      return this.resolve(metadata.implementations[0], data);
     } else {
       const name = FriendlyNameFactory.create(metadata.factory);
       throw new Error(`Found multiple implementations for ${name}.`);
@@ -62,15 +80,16 @@ class SingleInstanceResolver implements IInstanceResolver {
 class ArrayResolver implements IInstanceResolver {
   private resolver = new SingleInstanceResolver();
 
-  resolve(metadata: Metadata): any {
-    return metadata.implementations.map(impl => this.resolver.resolve(impl));
+  resolve(metadata: Metadata, data: ContainerData): any {
+    return metadata.implementations.map(impl => this.resolver.resolve(impl, data));
   }
 }
 
 class Metadata {
-  public dependencies: (() => any)[] = [];
+  public dependencies: ((data: ContainerData) => any)[] = [];
   public instanceFactory: IInstanceFactory = new PerResolutionInstanceFactory();
   public implementations: Metadata[] = [];
+  public disposalFunction: (instance: any) => void = null;
 
   constructor(public factory) {
     this.findDependencies();
@@ -86,7 +105,7 @@ class Metadata {
       this.dependencies = paramTypes.map(t => {
         const metadata = MetadataFactory.create(t);
         const resolver = new SingleInstanceResolver();
-        return () => resolver.resolve(metadata);
+        return (data: ContainerData) => resolver.resolve(metadata, data);
       });
     }
   }
@@ -106,15 +125,20 @@ class MetadataFactory {
 
 export class Container {
   private resolver = new SingleInstanceResolver();
+  private data = new ContainerData();
 
   resolve<TService>(factory: {new (...args): TService}): TService {
     const metadata = MetadataFactory.create(factory);
-    return <TService> this.resolver.resolve(metadata);
+    return <TService> this.resolver.resolve(metadata, this.data);
   }
 
   registerInstance<TImpl extends TService, TService>(service: {new (...args):  TService}, instance: TImpl) {
     const metadata = MetadataFactory.create(service);
     metadata.instanceFactory = new RegisteredInstanceFactory(instance);
+  }
+
+  dispose() {
+    this.data.dispose();
   }
 }
 
@@ -142,7 +166,7 @@ export function Many(service: Function) {
     const metadata = MetadataFactory.create(target);
     const resolver = new ArrayResolver();
     const paramMetadata = MetadataFactory.create(service);
-    metadata.dependencies[index] = () => resolver.resolve(paramMetadata);
+    metadata.dependencies[index] = data => resolver.resolve(paramMetadata, data);
   };
 }
 
@@ -151,7 +175,13 @@ export function Factory(service: Function) {
     const metadata = MetadataFactory.create(target);
     const resolver = new SingleInstanceResolver();
     const paramMetadata = MetadataFactory.create(service);
-    metadata.dependencies[index] = () => () => resolver.resolve(paramMetadata);
+    metadata.dependencies[index] = data => () => resolver.resolve(paramMetadata, data);
   };
 }
 
+export function Disposable(disposalFunction: (instance: any) => void = instance => instance.dispose()) {
+  return function(target: Function) {
+    const metadata = MetadataFactory.create(target);
+    metadata.disposalFunction = disposalFunction;
+  };
+}

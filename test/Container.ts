@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {Container, Singleton, Transient, Many, Factory} from '../src/Container';
+import {Container, Singleton, Transient, Many, Factory, Disposable} from '../src/Container';
 const expect = chai.expect;
 
 describe('Container', () => {
@@ -223,8 +223,70 @@ describe('Container', () => {
     expect(instanceCount).to.equal(1);
   });
 
+  it('should dispose of transient resources when the container is disposed', () => {
+    // Arrange
+    let disposeCount = 0;
+    @Transient()
+    @Disposable()
+    class Foo {
+      public dispose() {
+        ++disposeCount;
+      }
+    }
+    sut.resolve(Foo);
+    sut.resolve(Foo);
+    // Act
+    sut.dispose();
+    // Arrange
+    expect(disposeCount).to.equal(2);
+  });
+
+  it('should dispose of singleton resources when the container is disposed', () => {
+    // Arrange
+    let disposeCount = 0;
+    @Singleton()
+    @Disposable()
+    class Foo {
+      public dispose() {
+        ++disposeCount;
+      }
+    }
+    sut.resolve(Foo);
+    sut.resolve(Foo);
+    // Act
+    sut.dispose();
+    // Arrange
+    expect(disposeCount).to.equal(1);
+  });
+
+  it('should dispose of resources created through factories when the container is disposed', () => {
+    // Arrange
+    let disposeCount = 0;
+    @Transient()
+    @Disposable()
+    class Foo {
+      public dispose() {
+        ++disposeCount;
+      }
+    }
+    @Transient()
+    class FooFactory {
+      constructor(@Factory(Foo) private factory: () => Foo) {}
+
+      create() {
+        return this.factory();
+      }
+    }
+    const factory = sut.resolve(FooFactory);
+    factory.create();
+    factory.create();
+    // Act
+    sut.dispose();
+    // Arrange
+    expect(disposeCount).to.equal(2);
+  });
+
   // TODO:
-  // Disposal of resources
   // Child containers
   // Multiple container instances (i.e., fix usage of essentially static metadata).
 });
