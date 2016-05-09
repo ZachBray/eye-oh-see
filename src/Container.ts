@@ -146,3 +146,12 @@ export function Many(service: Function) {
   };
 }
 
+export function Factory(service: Function) {
+  return function(target: Function, key: string, index: number) {
+    const metadata = MetadataFactory.create(target);
+    const resolver = new SingleInstanceResolver();
+    const paramMetadata = MetadataFactory.create(service);
+    metadata.dependencies[index] = () => () => resolver.resolve(paramMetadata);
+  };
+}
+

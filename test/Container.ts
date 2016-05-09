@@ -1,5 +1,5 @@
 import * as chai from 'chai';
-import {Container, Singleton, Transient, Many} from '../src/Container';
+import {Container, Singleton, Transient, Many, Factory} from '../src/Container';
 const expect = chai.expect;
 
 describe('Container', () => {
@@ -178,9 +178,53 @@ describe('Container', () => {
     expect(dogInstanceCount).to.equal(1);
   });
 
+  it('should inject factories where the factory attribute is used', () => {
+    // Arrange
+    @Transient()
+    class Foo {}
+    @Transient()
+    class Bar {
+      public a: Foo;
+      public b: Foo;
+      constructor(@Factory(Foo) factory: () => Foo) {
+        this.a = factory();
+        this.b = factory();
+      }
+    }
+    // Act
+    const instance = sut.resolve(Bar);
+    // Arrange
+    expect(instance.a instanceof Foo).to.be.true;
+    expect(instance.b instanceof Foo).to.be.true;
+    expect(instance.a === instance.b).to.be.false;
+  });
+
+  it('should respect the lifetime registrations when resolving through factories', () => {
+    // Arrange
+    let instanceCount = 0;
+    @Singleton()
+    class Foo {
+      constructor() {
+        ++instanceCount;
+      }
+    }
+    @Transient()
+    class Bar {
+      public a: Foo;
+      public b: Foo;
+      constructor(@Factory(Foo) factory: () => Foo) {
+        this.a = factory();
+        this.b = factory();
+      }
+    }
+    // Act
+    sut.resolve(Bar);
+    // Arrange
+    expect(instanceCount).to.equal(1);
+  });
+
   // TODO:
-  // Child containers
-  // Factories
   // Disposal of resources
+  // Child containers
   // Multiple container instances (i.e., fix usage of essentially static metadata).
 });
