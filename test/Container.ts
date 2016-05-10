@@ -357,12 +357,15 @@ describe('Registration via attributes', () => {
       }
     }
     @InstancePerDependency()
-    class MyUnitOfWork {
-      constructor(@UnitOfWork(OwnedResource) public unitOfWork: IUnitOfWork<OwnedResource>) {}
+    class MyWorkManager {
+      public unitOfWork: IUnitOfWork<OwnedResource>;
+      constructor(@UnitOfWork(OwnedResource) workFactory: () => IUnitOfWork<OwnedResource>) {
+        this.unitOfWork = workFactory();
+      }
     }
     sut.register(OwnedResource);
-    sut.register(MyUnitOfWork);
-    const instance = sut.resolve(MyUnitOfWork);
+    sut.register(MyWorkManager);
+    const instance = sut.resolve(MyWorkManager);
     // Act
     instance.unitOfWork.dispose();
     // Assert
@@ -380,12 +383,15 @@ describe('Registration via attributes', () => {
       }
     }
     @InstancePerDependency()
-    class MyUnitOfWork {
-      constructor(@UnitOfWork(NotOwnedResource) public unitOfWork: IUnitOfWork<NotOwnedResource>) {}
+    class MyWorkManager {
+      public unitOfWork: IUnitOfWork<NotOwnedResource>;
+      constructor(@UnitOfWork(NotOwnedResource) workFactory: () => IUnitOfWork<NotOwnedResource>) {
+        this.unitOfWork = workFactory();
+      }
     }
     sut.register(NotOwnedResource);
-    sut.register(MyUnitOfWork);
-    const instance = sut.resolve(MyUnitOfWork);
+    sut.register(MyWorkManager);
+    const instance = sut.resolve(MyWorkManager);
     // Act
     instance.unitOfWork.dispose();
     // Assert
@@ -403,17 +409,23 @@ describe('Registration via attributes', () => {
       }
     }
     @InstancePerDependency()
-    class MyUnitOfWork {
-      constructor(@UnitOfWork(OwnedResource) public unitOfWork: IUnitOfWork<OwnedResource>) {}
+    class MyWorkManager {
+      public unitOfWork: IUnitOfWork<OwnedResource>;
+      constructor(@UnitOfWork(OwnedResource) workFactory: () => IUnitOfWork<OwnedResource>) {
+        this.unitOfWork = workFactory();
+      }
     }
     @InstancePerDependency()
-    class MyOuterUnitOfWork {
-      constructor(@UnitOfWork(MyUnitOfWork) public unitOfWork: IUnitOfWork<MyOuterUnitOfWork>) {}
+    class MyOuterWorkManager {
+      public unitOfWork: IUnitOfWork<MyWorkManager>;
+      constructor(@UnitOfWork(MyWorkManager) workFactory: () => IUnitOfWork<MyWorkManager>) {
+        this.unitOfWork = workFactory();
+      }
     }
     sut.register(OwnedResource);
-    sut.register(MyUnitOfWork);
-    sut.register(MyOuterUnitOfWork);
-    const instance = sut.resolve(MyOuterUnitOfWork);
+    sut.register(MyWorkManager);
+    sut.register(MyOuterWorkManager);
+    const instance = sut.resolve(MyOuterWorkManager);
     // Act
     instance.unitOfWork.dispose();
     // Assert
