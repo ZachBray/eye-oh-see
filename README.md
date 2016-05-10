@@ -179,7 +179,7 @@ class MyFirstResource {
 ```typescript
 // Service used inside unit of work
 @InstancePerDependency()
-@Disposable
+@Disposable()
 class MyService {
   dispose() { ... }
 }
