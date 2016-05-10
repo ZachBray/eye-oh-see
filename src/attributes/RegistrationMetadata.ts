@@ -1,7 +1,7 @@
 import 'reflect-metadata';
-import Registration from '../Registration';
+import Registration from '../registration/Registration';
 import Parameter from '../parameters/Parameter';
-import KeyFactory from '../KeyFactory';
+import KeyFactory from './KeyFactory';
 
 const IOC_METADATA_KEY = 'ioc:metadata';
 

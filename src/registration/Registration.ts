@@ -1,8 +1,8 @@
-import InstancePerDependencyResolver from './resolvers/InstancePerDependencyResolver';
-import SingleInstanceResolver from './resolvers/SingleInstanceResolver';
-import ServiceImplementationResolver from './resolvers/ServiceImplementationResolver';
-import ProvidedInstanceResolver from './resolvers/ProvidedInstanceResolver';
-import CombinedResolver from './resolvers/CombinedResolver';
+import InstancePerDependencyResolver from '../resolvers/InstancePerDependencyResolver';
+import SingleInstanceResolver from '../resolvers/SingleInstanceResolver';
+import ServiceImplementationResolver from '../resolvers/ServiceImplementationResolver';
+import ProvidedInstanceResolver from '../resolvers/ProvidedInstanceResolver';
+import CombinedResolver from '../resolvers/CombinedResolver';
 
 export default class Registration implements IRegistration {
   public parameters: IParameter[] = [];
