@@ -1,8 +1,8 @@
 export default class ArrayParameter {
-  constructor(private serviceKey: string) {}
+  constructor(private service: Function) {}
 
   resolve(container: IContainer): any {
-    return container.resolveMany(this.serviceKey);
+    return container.resolveMany(this.service);
   }
 }
 

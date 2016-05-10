@@ -1,5 +1,5 @@
 interface IContainer {
-  resolve(serviceKey: string): any;
-  resolveMany(serviceKey: string): any[];
+  resolve(service: Function): any;
+  resolveMany(service: Function): any[];
   registerDisposable(disposable: () => void): void;
 }

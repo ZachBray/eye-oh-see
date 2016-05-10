@@ -22,7 +22,7 @@ describe('Container', () => {
     // Act
     const instance = sut.resolve(Foo);
     // Assert
-    expect(instance instanceof Foo).to.be.true;
+    expect(instance instanceof Foo).to.equal(true, `instance should be a Foo but was ${typeof instance}`);
     expect(instanceCount).to.equal(1);
   });
 

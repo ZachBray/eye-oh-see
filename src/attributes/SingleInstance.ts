@@ -6,7 +6,7 @@ export default function SingleInstance(service?: Function) {
     metadata.addInitialization(registration => registration.singleInstance());
     if (service != null) {
       const serviceMetadata = RegistrationMetadata.findOrCreate(service);
-      serviceMetadata.addInitialization(registration => registration.implementedBy(metadata.key));
+      serviceMetadata.addInitialization(registration => registration.implementedBy(target));
     }
   };
 }

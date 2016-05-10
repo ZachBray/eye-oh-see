@@ -4,25 +4,25 @@ import ServiceImplementationResolver from '../resolvers/ServiceImplementationRes
 import ProvidedInstanceResolver from '../resolvers/ProvidedInstanceResolver';
 import CombinedResolver from '../resolvers/CombinedResolver';
 
+enum Quantity {
+  One,
+  Many
+}
+
 export default class Registration implements IRegistration {
   public parameters: IParameter[] = [];
   public disposalFunction;
   private resolver: IResolver;
+  private isResolving: boolean;
 
   constructor (public key: string, public factory: (...args) => any) {}
 
-  public resolve(container: IContainer) {
-    if (this.resolver == null) {
-      throw new Error(`No resolution strategy specified for ${this.key}`);
-    }
-    return this.resolver.resolve(container);
+  public resolveOne(container: IContainer): any {
+    return this.resolve(container, Quantity.One);
   }
 
-  public resolveMany(container: IContainer) {
-    if (this.resolver == null) {
-      throw new Error(`No resolution strategy specified for ${this.key}`);
-    }
-    return this.resolver.resolveMany(container);
+  public resolveMany(container: IContainer): any {
+    return this.resolve(container, Quantity.Many);
   }
 
   public singleInstance() {
@@ -53,8 +53,8 @@ export default class Registration implements IRegistration {
     return this;
   }
 
-  public implementedBy(serviceImplementerKey: string) {
-    const implementerResolver = new ServiceImplementationResolver(serviceImplementerKey);
+  public implementedBy(serviceImpl: Function) {
+    const implementerResolver = new ServiceImplementationResolver(serviceImpl);
     if (this.resolver == null) {
       this.resolver = implementerResolver;
     } else if (this.resolver instanceof ServiceImplementationResolver || this.resolver instanceof CombinedResolver) {
@@ -71,5 +71,26 @@ export default class Registration implements IRegistration {
     }
     this.disposalFunction = disposalFunction;
     return this;
+  }
+
+  private resolve(container: IContainer, quantity: Quantity) {
+    if (this.resolver == null) {
+      throw new Error(`No resolution strategy specified for ${this.key}`);
+    }
+    try {
+      if (this.isResolving) {
+        throw new Error('Loop detected');
+      }
+      this.isResolving = true;
+      if (quantity === Quantity.One) {
+        return this.resolver.resolve(container);
+      } else {
+        return this.resolver.resolveMany(container);
+      }
+    } catch(error) {
+      throw new Error(`When resolving ${this.key}:\n\t${error}`);
+    } finally {
+      this.isResolving = false;
+    }
   }
 }

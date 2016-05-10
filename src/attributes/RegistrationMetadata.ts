@@ -36,10 +36,7 @@ export default class RegistrationMetadata {
     const paramTypes = Reflect.getMetadata('design:paramtypes', this.factory);
     if (paramTypes != null) {
       this.addInitialization((registration: Registration) => {
-        registration.parameters = paramTypes.map(t => {
-          const paramMetadata = RegistrationMetadata.findOrCreate(t);
-          return new Parameter(paramMetadata.key);
-        });
+        registration.parameters = paramTypes.map(t => new Parameter(t));
       });
     }
   }

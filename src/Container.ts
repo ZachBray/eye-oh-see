@@ -18,17 +18,17 @@ export default class Container implements IContainer {
     return registration;
   }
 
-  public resolve(locator: string | Function) {
-    const serviceKey = typeof locator === 'string' ? locator : RegistrationMetadata.findOrCreate(locator).key;
+  public resolve(service: Function) {
+    const serviceKey = RegistrationMetadata.findOrCreate(service).key;
     const registration = this.registrations[serviceKey];
     if (registration == null) {
       throw new Error(`No registrations in container for ${serviceKey}`);
     }
-    return registration.resolve(this);
+    return registration.resolveOne(this);
   }
 
-  public resolveMany(locator: string | Function) {
-    const serviceKey = typeof locator === 'string' ? locator : RegistrationMetadata.findOrCreate(locator).key;
+  public resolveMany(service: Function) {
+    const serviceKey = RegistrationMetadata.findOrCreate(service).key;
     const registration = this.registrations[serviceKey];
     if (registration == null) {
       throw new Error(`No registrations in container for ${serviceKey}`);

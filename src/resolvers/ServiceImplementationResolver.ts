@@ -1,11 +1,11 @@
 export default class ServiceImplementationResolver {
-  constructor(public serviceImplementerKey: string) {}
+  constructor(public serviceImpl: Function) {}
 
   resolve(container: IContainer) {
-    return container.resolve(this.serviceImplementerKey);
+    return container.resolve(this.serviceImpl);
   }
 
   resolveMany(container: IContainer) {
-    return container.resolveMany(this.serviceImplementerKey);
+    return container.resolveMany(this.serviceImpl);
   }
 }
