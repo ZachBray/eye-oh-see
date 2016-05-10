@@ -245,6 +245,40 @@ describe('Registration via attributes', () => {
     expect(instanceCount).to.equal(1);
   });
 
+  it('should resolve descendants with arguments provided to factories', () => {
+    // Arrange
+    class Color {
+      public static Red = new Color();
+      public static Green = new Color();
+    }
+    @InstancePerDependency()
+    class Knee {
+      constructor(public color: Color) {}
+    }
+    @InstancePerDependency()
+    class Leg {
+      constructor(public knee: Knee) {}
+    }
+    @InstancePerDependency()
+    class Robot {
+      public left: Leg;
+      public right: Leg;
+      constructor(@Factory(Color, Leg) factory: (color: Color) => Leg) {
+        this.left = factory(Color.Red);
+        this.right = factory(Color.Green);
+      }
+    }
+    sut.register(Knee);
+    sut.register(Leg);
+    sut.register(Robot);
+    // Act
+    const instance = sut.resolve(Robot);
+    // Arrange
+    expect(instance.left.knee.color).to.equal(Color.Red);
+    expect(instance.right.knee.color).to.equal(Color.Green);
+    expect(instance.left.knee.color).to.not.equal(instance.right.knee.color);
+  });
+
   it('should dispose of transient resources when the container is disposed', () => {
     // Arrange
     let disposeCount = 0;
@@ -385,9 +419,4 @@ describe('Registration via attributes', () => {
     // Assert
     expect(disposeCount).to.equal(1);
   });
-  // TODO:
-  // Generics
-  // Child containers
-  // Factories that take parameters
-  // Multiple container instances (i.e., fix usage of essentially static metadata).
 });
