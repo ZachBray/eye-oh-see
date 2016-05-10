@@ -357,6 +357,34 @@ describe('Registration via attributes', () => {
     // Assert
     expect(disposeCount).to.equal(0);
   });
+
+  it('should dispose of nested child containers when an ancestor is disposed', () => {
+    // Arrange
+    let disposeCount = 0;
+    @InstancePerDependency()
+    @Disposable()
+    class OwnedResource {
+      dispose() {
+        ++disposeCount;
+      }
+    }
+    @InstancePerDependency()
+    class MyUnitOfWork {
+      constructor(@UnitOfWork(OwnedResource) public unitOfWork: IUnitOfWork<OwnedResource>) {}
+    }
+    @InstancePerDependency()
+    class MyOuterUnitOfWork {
+      constructor(@UnitOfWork(MyUnitOfWork) public unitOfWork: IUnitOfWork<MyOuterUnitOfWork>) {}
+    }
+    sut.register(OwnedResource);
+    sut.register(MyUnitOfWork);
+    sut.register(MyOuterUnitOfWork);
+    const instance = sut.resolve(MyOuterUnitOfWork);
+    // Act
+    instance.unitOfWork.dispose();
+    // Assert
+    expect(disposeCount).to.equal(1);
+  });
   // TODO:
   // Generics
   // Child containers

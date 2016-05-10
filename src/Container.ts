@@ -4,16 +4,22 @@ import Registration from './registration/Registration';
 import RegistrationMetadata from './attributes/RegistrationMetadata';
 
 export default class Container implements IContainer {
+  private static nextId = 0;
   public parent: IContainer;
   private registrations: {[key: string]: Registration} = {};
+  private children: {[key: number]: Container} = {};
   private resources = [];
+  private id = ++Container.nextId;
 
   constructor(private parentImpl: Container = null) {
     this.parent = parentImpl;
   }
 
   public createChild() {
-    return new Container(this);
+     const child = new Container(this);
+     this.children[child.id] = child;
+     child.registerDisposable(() => delete this.children[child.id]);
+     return child;
   }
 
   public register(factory) {
@@ -61,6 +67,8 @@ export default class Container implements IContainer {
   }
 
   public dispose() {
+    Object.keys(this.children).forEach(id => this.children[id].dispose());
+    this.children = [];
     this.resources.forEach(dispose => dispose());
     this.resources = [];
     this.registrations = {};
