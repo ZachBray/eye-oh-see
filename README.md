@@ -2,7 +2,9 @@
 
 EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perform constructor injection. 
 
-## Quick feature summary
+## Features
+
+### Implemented
 
 - [x] Constructor injection
 - [x] Registration of transient dependencies - `@InstancePerDependency()`
@@ -16,16 +18,16 @@ EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perf
 - [x] Automatic disposal of container descendants
 - [x] Ability to override attribute registration for testing using container API
 
-## Road map
+### Road map
 
 - [ ] Unit of work factories that accept parameters
 - [ ] Registration of a single instance for multiple services - @SingleInstance(BaseClassA, BaseClassB)`
 - [ ] Registration of singleton-in-scope - @InstancePerScope("MyScopeName")
 
 
-## Code snippets
+### Code snippets
 
-### Registering a singleton
+#### Registering a singleton
 
 ```typescript
 // This will only be constructed once
@@ -33,7 +35,7 @@ EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perf
 class MySingleton { ... }
 ```
 
-### Registering a singleton that is resolved by a base class
+#### Registering a singleton that is resolved as its base class
 
 ```typescript
 // This is what consumers resolve
@@ -44,7 +46,7 @@ class MyBaseClass { ... }
 class MySingleton { ... }
 ```
 
-### Registering a transient
+#### Registering a transient
 
 ```typescript
 // This will be constructed for each dependency
@@ -52,7 +54,7 @@ class MySingleton { ... }
 class MySingleton { ... }
 ```
 
-### Registering a transient that is resolved by a base class
+#### Registering a transient that is resolved as its base class
 
 ```typescript
 // This is what consumers resolve
@@ -63,7 +65,7 @@ class MyBaseClass { ... }
 class MySingleton { ... }
 ```
 
-### Array injection
+#### Array injection
 
 ```typescript
 // This is the service interface
@@ -86,7 +88,7 @@ class MyConsumer {
 }
 ```
 
-### Simple factory injection
+#### Simple factory injection
 
 ```typescript
 // The service
@@ -107,7 +109,7 @@ class MyConsumer {
 }
 ```
 
-### Factory injection with parameters / "robot legs"
+#### Factory injection with parameters / "robot legs"
 
 ```typescript
 
@@ -149,7 +151,7 @@ class Robot {
 }
 ```
 
-### Automatic disposal
+#### Automatic disposal
 
 ```typescript
 // It calls the disposal method when the container it was resolved from is disposed
@@ -172,7 +174,7 @@ class MyFirstResource {
 }
 ```
 
-### Child containers / unit of work
+#### Child containers / unit of work
 
 ```typescript
 // Service used inside unit of work
