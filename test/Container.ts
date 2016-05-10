@@ -1,8 +1,8 @@
 import * as chai from 'chai';
-import {Container, SingleInstance, InstancePerDependency, ArrayOf, Factory, Disposable} from '../src/Index';
+import {Container, SingleInstance, InstancePerDependency, ArrayOf, Factory, Disposable, UnitOfWork} from '../src/Index';
 const expect = chai.expect;
 
-describe('Container', () => {
+describe('Registration via attributes', () => {
   let sut: Container;
 
   beforeEach(() => {
@@ -312,6 +312,51 @@ describe('Container', () => {
     expect(disposeCount).to.equal(2);
   });
 
+  it('should dispose of transitively owned resources when a unit of work is disposed', () => {
+    // Arrange
+    let disposeCount = 0;
+    @InstancePerDependency()
+    @Disposable()
+    class OwnedResource {
+      dispose() {
+        ++disposeCount;
+      }
+    }
+    @InstancePerDependency()
+    class MyUnitOfWork {
+      constructor(@UnitOfWork(OwnedResource) public unitOfWork: IUnitOfWork<OwnedResource>) {}
+    }
+    sut.register(OwnedResource);
+    sut.register(MyUnitOfWork);
+    const instance = sut.resolve(MyUnitOfWork);
+    // Act
+    instance.unitOfWork.dispose();
+    // Assert
+    expect(disposeCount).to.equal(1);
+  });
+
+  it('should not dispose of non-owned resources, e.g., singletons, when a unit of work is disposed', () => {
+    // Arrange
+    let disposeCount = 0;
+    @SingleInstance()
+    @Disposable()
+    class NotOwnedResource {
+      dispose() {
+        ++disposeCount;
+      }
+    }
+    @InstancePerDependency()
+    class MyUnitOfWork {
+      constructor(@UnitOfWork(NotOwnedResource) public unitOfWork: IUnitOfWork<NotOwnedResource>) {}
+    }
+    sut.register(NotOwnedResource);
+    sut.register(MyUnitOfWork);
+    const instance = sut.resolve(MyUnitOfWork);
+    // Act
+    instance.unitOfWork.dispose();
+    // Assert
+    expect(disposeCount).to.equal(0);
+  });
   // TODO:
   // Generics
   // Child containers

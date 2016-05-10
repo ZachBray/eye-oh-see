@@ -4,8 +4,17 @@ import Registration from './registration/Registration';
 import RegistrationMetadata from './attributes/RegistrationMetadata';
 
 export default class Container implements IContainer {
+  public parent: IContainer;
   private registrations: {[key: string]: Registration} = {};
   private resources = [];
+
+  constructor(private parentImpl: Container = null) {
+    this.parent = parentImpl;
+  }
+
+  public createChild() {
+    return new Container(this);
+  }
 
   public register(factory) {
     const metadata = RegistrationMetadata.findOrCreate(factory);
@@ -18,22 +27,33 @@ export default class Container implements IContainer {
     return registration;
   }
 
-  public resolve(service: Function) {
+  public resolve<TService>(service: new (...args) => TService, resolvingContainer: IContainer = this): TService {
     const serviceKey = RegistrationMetadata.findOrCreate(service).key;
     const registration = this.registrations[serviceKey];
-    if (registration == null) {
+    if (registration == null && this.parentImpl == null) {
       throw new Error(`No registrations in container for ${serviceKey}`);
+    } else if (registration == null) {
+      return this.parentImpl.resolve(service, resolvingContainer);
     }
-    return registration.resolveOne(this);
+    return registration.resolveOne({
+      registeringContainer: this,
+      resolvingContainer
+    });
   }
 
-  public resolveMany(service: Function) {
+  // TODO: Refactor to remove duplication here.
+  public resolveMany<TService>(service: new (...args) => TService, resolvingContainer: IContainer = this): TService[] {
     const serviceKey = RegistrationMetadata.findOrCreate(service).key;
     const registration = this.registrations[serviceKey];
-    if (registration == null) {
+    if (registration == null && this.parentImpl == null) {
       throw new Error(`No registrations in container for ${serviceKey}`);
+    } else if (registration == null) {
+      return this.parentImpl.resolveMany(service, resolvingContainer);
     }
-    return registration.resolveMany(this);
+    return registration.resolveMany({
+      registeringContainer: this,
+      resolvingContainer
+    });
   }
 
   public registerDisposable(disposable: () => void) {

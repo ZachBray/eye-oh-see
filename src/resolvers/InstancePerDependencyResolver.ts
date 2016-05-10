@@ -1,18 +1,18 @@
 export default class InstancePerDependencyResolver implements IResolver {
   constructor(private registration: IRegistration) {}
 
-  resolve(container: IContainer) {
-    const args = this.registration.parameters.map(p => p.resolve(container));
+  resolve(context: IResolutionContext) {
+    const args = this.registration.parameters.map(p => p.resolve(context.resolvingContainer));
     // TODO: is class?
     const instance = new this.registration.factory(...args);
     const dispose = this.registration.disposalFunction;
     if (dispose != null) {
-      container.registerDisposable(() => dispose(instance));
+      context.resolvingContainer.registerDisposable(() => dispose(instance));
     }
     return instance;
   }
 
-  resolveMany(container: IContainer) {
-    return [this.resolve(container)];
+  resolveMany(context: IResolutionContext) {
+    return [this.resolve(context)];
   }
 }

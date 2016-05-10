@@ -1,11 +1,11 @@
 export default class ProvidedInstanceResolver implements IResolver {
   constructor(private providedInstance) {}
 
-  resolve(container: IContainer) {
+  resolve(context: IResolutionContext) {
     return this.providedInstance;
   }
 
-  resolveMany(container: IContainer) {
-    return [this.resolve(container)];
+  resolveMany(context: IResolutionContext) {
+    return [this.resolve(context)];
   }
 }

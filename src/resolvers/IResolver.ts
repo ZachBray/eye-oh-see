@@ -1,4 +1,4 @@
 interface IResolver {
-  resolve(container: IContainer): any;
-  resolveMany(container: IContainer): any;
+  resolve(context: IResolutionContext): any;
+  resolveMany(context: IResolutionContext): any;
 }

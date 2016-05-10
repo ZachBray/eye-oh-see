@@ -1,25 +1,27 @@
+import InstancePerDependencyResolver from './InstancePerDependencyResolver';
+
 export default class SingleInstanceResolver implements IResolver {
   private hasResolved = false;
   private resolvedValue;
+  private innerResolver: IResolver;
 
-  constructor(private registration: IRegistration) {}
+  constructor(private registration: IRegistration) {
+    this.innerResolver = new InstancePerDependencyResolver(registration);
+  }
 
-  resolve(container: IContainer) {
+  resolve(context: IResolutionContext) {
     if (!this.hasResolved) {
-      const args = this.registration.parameters.map(p => p.resolve(container));
-      // TODO: is class?
-      this.resolvedValue = new this.registration.factory(...args);
-      const dispose = this.registration.disposalFunction;
-      if (dispose != null) {
-        container.registerDisposable(() => dispose(this.resolvedValue));
-      }
+      this.resolvedValue = this.innerResolver.resolve({
+        registeringContainer: context.registeringContainer,
+        resolvingContainer: context.registeringContainer
+      });
       this.hasResolved = true;
     }
     return this.resolvedValue;
   }
 
-  resolveMany(container: IContainer) {
-    return [this.resolve(container)];
+  resolveMany(context: IResolutionContext) {
+    return [this.resolve(context)];
   }
 }
 

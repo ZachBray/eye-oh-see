@@ -17,12 +17,12 @@ export default class Registration implements IRegistration {
 
   constructor (public key: string, public factory: (...args) => any) {}
 
-  public resolveOne(container: IContainer): any {
-    return this.resolve(container, Quantity.One);
+  public resolveOne(context: IResolutionContext): any {
+    return this.resolve(context, Quantity.One);
   }
 
-  public resolveMany(container: IContainer): any {
-    return this.resolve(container, Quantity.Many);
+  public resolveMany(context: IResolutionContext): any {
+    return this.resolve(context, Quantity.Many);
   }
 
   public singleInstance() {
@@ -73,7 +73,7 @@ export default class Registration implements IRegistration {
     return this;
   }
 
-  private resolve(container: IContainer, quantity: Quantity) {
+  private resolve(context: IResolutionContext, quantity: Quantity) {
     if (this.resolver == null) {
       throw new Error(`No resolution strategy specified for ${this.key}`);
     }
@@ -83,9 +83,9 @@ export default class Registration implements IRegistration {
       }
       this.isResolving = true;
       if (quantity === Quantity.One) {
-        return this.resolver.resolve(container);
+        return this.resolver.resolve(context);
       } else {
-        return this.resolver.resolveMany(container);
+        return this.resolver.resolveMany(context);
       }
     } catch(error) {
       throw new Error(`When resolving ${this.key}:\n\t${error}`);
