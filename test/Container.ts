@@ -431,4 +431,28 @@ describe('Registration via attributes', () => {
     // Assert
     expect(disposeCount).to.equal(1);
   });
+
+  it('should resolve descendants with arguments passed to unit of work factory', () => {
+    // Arrange
+    class Color {
+      public static Blue = new Color();
+    }
+    @InstancePerDependency()
+    class OwnedResource {
+      constructor(public color: Color) {}
+    }
+    @InstancePerDependency()
+    class MyWorkManager {
+      public unitOfWork: IUnitOfWork<OwnedResource>;
+      constructor(@UnitOfWork(Color, OwnedResource) workFactory: (color: Color) => IUnitOfWork<OwnedResource>) {
+        this.unitOfWork = workFactory(Color.Blue);
+      }
+    }
+    sut.register(OwnedResource);
+    sut.register(MyWorkManager);
+    // Act
+    const instance = sut.resolve(MyWorkManager);
+    // Assert
+    expect(instance.unitOfWork.value.color).to.equal(Color.Blue);
+  });
 });

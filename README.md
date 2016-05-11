@@ -15,12 +15,12 @@ EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perf
 - [x] Parameterized factory injection - `@Factory(ParamTypeA, ParamTypeB, ReturnType)`
 - [x] Automatic disposal of resolved instances - `@Disposable()` and `@Disposable(instance => instance.disposeMethod()`
 - [x] Child-containers/unit-of-work injection - `@UnitOfWork(OwnedType)`
+- [x] Parameterized child-container/unit-of-work factories - `@UnitOfWork(ParamTypeA, ParamTypeB, OwnedType)`
 - [x] Automatic disposal of container descendants
 - [x] Ability to override attribute registration for testing using container API
 
 ### Road map
 
-- [ ] Unit of work factories that accept parameters
 - [ ] Registration of a single instance for multiple services - @SingleInstance(BaseClassA, BaseClassB)`
 - [ ] Registration of singleton-in-scope - @InstancePerScope("MyScopeName")
 
@@ -199,6 +199,47 @@ class MyApplication {
   onStartRequest(id) {
     ...
     this.requests[id] = this.requestFactory();
+    ...
+  }
+
+  onFinishRequest(id) {
+    ...
+    // Disposes the resolved instance of MyService for the given request
+    this.requests[id].dispose();
+    ...
+  }
+}
+```
+
+
+#### Parameterized child containers / unit of work
+
+```typescript
+// Service used inside unit of work
+@InstancePerDependency()
+@Disposable()
+class MyService {
+  // Accepts some configuration
+  constructor(config: Config) { ... }
+  dispose() { ... }
+}
+
+// Business aspect with some lifetime that is shorter than that of the application
+@InstancePerDependency()
+class MyRequest {
+  constructor(service: MyService)
+}
+
+// The application that handles the lifetimes of those business aspects
+@InstancePerDependency()
+class MyApplication {
+  ...
+  constructor(@UnitOfWork(Config, MyRequest) private requestFactory: (config: Config) => IUnitOfWork<MyRequest>) { ... }
+  ...
+  onStartRequest(id) {
+    ...
+    // unit of work created with parameter that will be resolved by MyService instance
+    this.requests[id] = this.requestFactory(this.config);
     ...
   }
 

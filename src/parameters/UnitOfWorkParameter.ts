@@ -1,10 +1,16 @@
+import FactoryParameter from './FactoryParameter';
+
 export default class UnitOfWorkParameter {
-  constructor(private service: Function) {}
+  private factoryParameter: IParameter;
+  constructor(private paramServices: Function[], private service: Function) {
+    this.factoryParameter = new FactoryParameter(paramServices, service);
+  }
 
   resolve(container: IContainer): any {
-    return () => {
+    return (...args) => {
       const childContainer = container.createChild();
-      const value = childContainer.resolve(this.service);
+      const valueFactory = this.factoryParameter.resolve(childContainer);
+      const value = valueFactory(...args);
       const dispose = () => childContainer.dispose();
       return { value, dispose };
     };
