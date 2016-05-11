@@ -59,6 +59,23 @@ describe('Registration via attributes', () => {
     expect(instance instanceof Dog).to.be.true;
   });
 
+  it('should allow transient implementations to register as multiple services', () => {
+    // Arrange
+    class IAnimal {}
+    class IPet {}
+    @InstancePerDependency(IAnimal, IPet)
+    class Dog {}
+    sut.register(IAnimal);
+    sut.register(IPet);
+    sut.register(Dog);
+    // Arrange
+    const instanceA = sut.resolve(IAnimal);
+    const instanceB = sut.resolve(IPet);
+    // Assert
+    expect(instanceA instanceof Dog).to.be.true;
+    expect(instanceB instanceof Dog).to.be.true;
+  });
+
   it('should only construct one instance of a singleton entry', () => {
     // Arrange
     let instanceCount = 0;
@@ -76,6 +93,24 @@ describe('Registration via attributes', () => {
     expect(instanceA instanceof Foo).to.be.true;
     expect(instanceB instanceof Foo).to.be.true;
     expect(instanceCount).to.equal(1);
+    expect(instanceA).to.equal(instanceB);
+  });
+
+  it('should allow singleton implementations to register as multiple services', () => {
+    // Arrange
+    class IAnimal {}
+    class IPet {}
+    @SingleInstance(IAnimal, IPet)
+    class Dog {}
+    sut.register(IAnimal);
+    sut.register(IPet);
+    sut.register(Dog);
+    // Arrange
+    const instanceA = sut.resolve(IAnimal);
+    const instanceB = sut.resolve(IPet);
+    // Assert
+    expect(instanceA instanceof Dog).to.be.true;
+    expect(instanceB instanceof Dog).to.be.true;
     expect(instanceA).to.equal(instanceB);
   });
 

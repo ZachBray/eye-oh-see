@@ -10,6 +10,7 @@ EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perf
 - [x] Registration of transient dependencies - `@InstancePerDependency()`
 - [x] Registration of singleton dependencies - `@SingleInstance()`
 - [x] Registration of implementations for abstract services - `@InstancePerDependency(BaseClass)` and `@SingleInstance(BaseClass)`
+- [x] Registration of a single implementation for multiple services - `@SingleInstance(BaseClassA, BaseClassB)` and `@InstancePerDependency(BaseClassA, BaseClassB)`
 - [x] Array injection - `@ArrayOf(BaseClass)`
 - [x] Factory injection - `@Factory(ReturnType)`
 - [x] Parameterized factory injection - `@Factory(ParamTypeA, ParamTypeB, ReturnType)`
@@ -21,7 +22,6 @@ EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perf
 
 ### Road map
 
-- [ ] Registration of a single instance for multiple services - @SingleInstance(BaseClassA, BaseClassB)`
 - [ ] Registration of singleton-in-scope - @InstancePerScope("MyScopeName")
 
 
@@ -43,7 +43,21 @@ class MyBaseClass { ... }
 
 // This is the implementation
 @SingleInstance(MyBaseClass)
-class MySingleton { ... }
+class MySingleton extends MyBaseClass { ... }
+```
+
+#### Registering a singleton that can be resolved as multiple interfaces
+
+```typescript
+// This is one of the interfaces that consumers resolve
+class MyBaseClassA { ... }
+
+// This is another of the interfaces that consumers resolve
+class MyBaseClassB { ... }
+
+// This is the implementation
+@SingleInstance(MyBaseClassA, MyBaseClassB)
+class MySingleton implements MyBaseClassA, MyBaseClassB { ... }
 ```
 
 #### Registering a transient
@@ -62,7 +76,21 @@ class MyBaseClass { ... }
 
 // This is the implementation
 @InstancePerDependency(MyBaseClass)
-class MyTransient { ... }
+class MyTransient extends MyBaseClass { ... }
+```
+
+#### Registering a transient that can be resolved as multiple interfaces
+
+```typescript
+// This is one of the interfaces that consumers resolve
+class MyBaseClassA { ... }
+
+// This is another of the interfaces that consumers resolve
+class MyBaseClassB { ... }
+
+// This is the implementation
+@InstancePerDependency(MyBaseClassA, MyBaseClassB)
+class MyTransient implements MyBaseClassA, MyBaseClassB { ... }
 ```
 
 #### Array injection
