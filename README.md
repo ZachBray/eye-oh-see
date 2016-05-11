@@ -51,7 +51,7 @@ class MySingleton { ... }
 ```typescript
 // This will be constructed for each dependency
 @InstancePerDependency()
-class MySingleton { ... }
+class MyTransient { ... }
 ```
 
 #### Registering a transient that is resolved as its base class
@@ -62,7 +62,7 @@ class MyBaseClass { ... }
 
 // This is the implementation
 @InstancePerDependency(MyBaseClass)
-class MySingleton { ... }
+class MyTransient { ... }
 ```
 
 #### Array injection
