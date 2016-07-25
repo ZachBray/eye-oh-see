@@ -1,0 +1,15 @@
+"use strict";
+var Container_1 = require('./Container');
+exports.Container = Container_1.default;
+var SingleInstance_1 = require('./attributes/SingleInstance');
+exports.SingleInstance = SingleInstance_1.default;
+var InstancePerDependency_1 = require('./attributes/InstancePerDependency');
+exports.InstancePerDependency = InstancePerDependency_1.default;
+var Disposable_1 = require('./attributes/Disposable');
+exports.Disposable = Disposable_1.default;
+var ArrayOf_1 = require('./attributes/ArrayOf');
+exports.ArrayOf = ArrayOf_1.default;
+var Factory_1 = require('./attributes/Factory');
+exports.Factory = Factory_1.default;
+var UnitOfWork_1 = require('./attributes/UnitOfWork');
+exports.UnitOfWork = UnitOfWork_1.default;

@@ -2,7 +2,7 @@
   "name": "eye-oh-see",
   "version": "0.0.1",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/src/Index.js",
   "scripts": {
     "clean": "rimraf dist",
     "lint": "tslint ./**/*.ts",
