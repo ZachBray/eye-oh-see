@@ -1,3 +1,6 @@
+/// <reference path="IResolver.ts" />
+/// <reference path="IResolutionContext.ts" />
+
 export default class InstancePerDependencyResolver implements IResolver {
   constructor(private registration: IRegistration) {}
 

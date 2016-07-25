@@ -1,3 +1,5 @@
+/// <reference path="../IContainer.ts" />
+
 export default class FactoryParameter {
   constructor(private paramServices: Function[], private service: Function) {}
 

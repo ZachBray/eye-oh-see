@@ -1,3 +1,6 @@
+/// <reference path="IParameter.ts" />
+/// <reference path="../IContainer.ts" />
+
 export default class Parameter implements IParameter {
   constructor(private service: Function) {}
 

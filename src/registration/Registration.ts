@@ -1,4 +1,7 @@
 /// <reference path="IRegistration.ts" />
+/// <reference path="../parameters/IParameter.ts" />
+/// <reference path="../resolvers/IResolver.ts" />
+/// <reference path="../resolvers/IResolutionContext.ts" />
 import InstancePerDependencyResolver from '../resolvers/InstancePerDependencyResolver';
 import SingleInstanceResolver from '../resolvers/SingleInstanceResolver';
 import ServiceImplementationResolver from '../resolvers/ServiceImplementationResolver';

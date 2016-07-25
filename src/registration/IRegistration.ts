@@ -1,3 +1,5 @@
+/// <reference path="../parameters/IParameter.ts" />
+
 interface IRegistration {
   parameters: IParameter[];
   factory;

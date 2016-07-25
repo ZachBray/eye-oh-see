@@ -1,3 +1,5 @@
+/// <reference path="IParameter.ts" />
+/// <reference path="../IContainer.ts" />
 "use strict";
 var Parameter = (function () {
     function Parameter(service) {

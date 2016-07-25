@@ -1,3 +1,4 @@
+/// <reference path="../IContainer.ts" />
 "use strict";
 var ArrayParameter = (function () {
     function ArrayParameter(service) {

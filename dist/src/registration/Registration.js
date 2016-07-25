@@ -1,5 +1,8 @@
 "use strict";
 /// <reference path="IRegistration.ts" />
+/// <reference path="../parameters/IParameter.ts" />
+/// <reference path="../resolvers/IResolver.ts" />
+/// <reference path="../resolvers/IResolutionContext.ts" />
 var InstancePerDependencyResolver_1 = require('../resolvers/InstancePerDependencyResolver');
 var SingleInstanceResolver_1 = require('../resolvers/SingleInstanceResolver');
 var ServiceImplementationResolver_1 = require('../resolvers/ServiceImplementationResolver');

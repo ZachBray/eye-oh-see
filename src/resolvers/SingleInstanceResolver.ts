@@ -1,3 +1,6 @@
+/// <reference path="IResolver.ts" />
+/// <reference path="IResolutionContext.ts" />
+
 import InstancePerDependencyResolver from './InstancePerDependencyResolver';
 
 export default class SingleInstanceResolver implements IResolver {

@@ -1,3 +1,5 @@
+/// <reference path="../IContainer.ts" />
+/// <reference path="IParameter.ts" />
 "use strict";
 var FactoryParameter_1 = require('./FactoryParameter');
 var UnitOfWorkParameter = (function () {

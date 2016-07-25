@@ -1,3 +1,5 @@
+/// <reference path="../IContainer.ts" />
+
 export default class ArrayParameter {
   constructor(private service: Function) {}
 

@@ -1,3 +1,5 @@
+/// <reference path="IResolver.ts" />
+/// <reference path="IResolutionContext.ts" />
 "use strict";
 var InstancePerDependencyResolver = (function () {
     function InstancePerDependencyResolver(registration) {

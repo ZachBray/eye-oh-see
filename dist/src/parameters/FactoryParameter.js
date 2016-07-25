@@ -1,3 +1,4 @@
+/// <reference path="../IContainer.ts" />
 "use strict";
 var FactoryParameter = (function () {
     function FactoryParameter(paramServices, service) {

@@ -1,3 +1,5 @@
+/// <reference path="IResolver.d.ts" />
+/// <reference path="IResolutionContext.d.ts" />
 export default class CombinedResolver implements IResolver {
     private key;
     private resolvers;

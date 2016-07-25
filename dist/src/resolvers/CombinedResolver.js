@@ -1,3 +1,5 @@
+/// <reference path="IResolver.ts" />
+/// <reference path="IResolutionContext.ts" />
 "use strict";
 var CombinedResolver = (function () {
     function CombinedResolver(key, resolvers) {

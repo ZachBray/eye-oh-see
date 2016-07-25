@@ -1,3 +1,4 @@
+/// <reference path="../IContainer.d.ts" />
 export default class FactoryParameter {
     private paramServices;
     private service;

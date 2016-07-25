@@ -1,3 +1,5 @@
+/// <reference path="IResolver.ts" />
+/// <reference path="IResolutionContext.ts" />
 "use strict";
 var InstancePerDependencyResolver_1 = require('./InstancePerDependencyResolver');
 var SingleInstanceResolver = (function () {

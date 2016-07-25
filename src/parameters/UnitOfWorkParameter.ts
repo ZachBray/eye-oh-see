@@ -1,3 +1,6 @@
+/// <reference path="../IContainer.ts" />
+/// <reference path="IParameter.ts" />
+
 import FactoryParameter from './FactoryParameter';
 
 export default class UnitOfWorkParameter {

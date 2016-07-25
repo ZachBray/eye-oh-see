@@ -1,3 +1,4 @@
+/// <reference path="registration/IRegistration.d.ts" />
 interface IContainer {
     parent: IContainer;
     createChild(): IContainer;

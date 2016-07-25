@@ -1,0 +1,1 @@
+/// <reference path="IResolutionContext.ts" />

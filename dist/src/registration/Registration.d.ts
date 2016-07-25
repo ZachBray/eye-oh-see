@@ -1,4 +1,7 @@
 /// <reference path="IRegistration.d.ts" />
+/// <reference path="../parameters/IParameter.d.ts" />
+/// <reference path="../resolvers/IResolver.d.ts" />
+/// <reference path="../resolvers/IResolutionContext.d.ts" />
 export default class Registration implements IRegistration {
     key: string;
     factory: (...args) => any;

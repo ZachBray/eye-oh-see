@@ -1,4 +1,7 @@
-export default class ServiceImplementationResolver {
+/// <reference path="IResolver.ts" />
+/// <reference path="IResolutionContext.ts" />
+
+export default class ServiceImplementationResolver implements IResolver {
   constructor(public serviceImpl: Function) {}
 
   resolve(context: IResolutionContext) {
