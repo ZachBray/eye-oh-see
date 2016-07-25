@@ -1,4 +1,4 @@
-/// <reference path="../../node_modules/reflect-metadata/reflect-metadata.d.ts" />
+/// <reference path="IContainer.d.ts" />
 import 'reflect-metadata';
 import Registration from './registration/Registration';
 export default class Container implements IContainer {

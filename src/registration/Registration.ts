@@ -1,3 +1,4 @@
+/// <reference path="IRegistration.ts" />
 import InstancePerDependencyResolver from '../resolvers/InstancePerDependencyResolver';
 import SingleInstanceResolver from '../resolvers/SingleInstanceResolver';
 import ServiceImplementationResolver from '../resolvers/ServiceImplementationResolver';

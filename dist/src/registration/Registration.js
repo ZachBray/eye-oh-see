@@ -1,4 +1,5 @@
 "use strict";
+/// <reference path="IRegistration.ts" />
 var InstancePerDependencyResolver_1 = require('../resolvers/InstancePerDependencyResolver');
 var SingleInstanceResolver_1 = require('../resolvers/SingleInstanceResolver');
 var ServiceImplementationResolver_1 = require('../resolvers/ServiceImplementationResolver');

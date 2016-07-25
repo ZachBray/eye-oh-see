@@ -1,4 +1,4 @@
-/// <reference path="../node_modules/reflect-metadata/reflect-metadata.d.ts" />
+/// <reference path="IContainer.ts" />
 import 'reflect-metadata';
 import Registration from './registration/Registration';
 import RegistrationMetadata from './attributes/RegistrationMetadata';

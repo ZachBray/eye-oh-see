@@ -1,5 +1,5 @@
 "use strict";
-/// <reference path="../node_modules/reflect-metadata/reflect-metadata.d.ts" />
+/// <reference path="IContainer.ts" />
 require('reflect-metadata');
 var Registration_1 = require('./registration/Registration');
 var RegistrationMetadata_1 = require('./attributes/RegistrationMetadata');

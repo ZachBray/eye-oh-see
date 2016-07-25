@@ -1,3 +1,4 @@
+/// <reference path="IRegistration.d.ts" />
 export default class Registration implements IRegistration {
     key: string;
     factory: (...args) => any;
