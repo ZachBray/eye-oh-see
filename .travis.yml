@@ -1,5 +1,5 @@
-language: nodejs
-nodejs:
+language: node_js
+node_js:
 - "6"
 install:
 - npm i -g typings tslint

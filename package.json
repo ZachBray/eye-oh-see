@@ -1,6 +1,6 @@
 {
   "name": "eye-oh-see",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "",
   "main": "dist/src/Index.js",
   "typings": "dist/src/Index.d.ts",
@@ -11,17 +11,18 @@
     "test": "mocha --require ts-node/register test/**/*.ts --recursive",
     "test:watch": "npm run test -- --watch",
     "prebuild": "npm run clean && npm run test",
-    "build": "tsc -p ."
+    "build": "tsc -p .",
+    "precommit": "npm run build"
   },
   "author": "",
   "license": "MIT",
   "devDependencies": {
     "chai": "^3.5.0",
-    "mocha": "^2.4.5",
-    "rimraf": "^2.5.2",
-    "ts-node": "^0.7.2",
+    "mocha": "^2.5.3",
+    "rimraf": "^2.5.4",
+    "ts-node": "^1.2.1",
     "typescript": "^1.8.10",
-    "typings": "^0.8.1"
+    "typings": "^1.3.2"
   },
   "dependencies": {
     "reflect-metadata": "^0.1.3"
