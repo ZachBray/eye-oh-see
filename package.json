@@ -1,7 +1,8 @@
 {
   "name": "eye-oh-see",
   "version": "0.1.0",
-  "description": "",
+  "description": "A TypeScript IoC library",
+  "keywords": ["TS", "typescript", "IoC", "DI", "inversion", "control", "dependency", "injection"],
   "main": "dist/src/Index.js",
   "typings": "dist/src/Index.d.ts",
   "scripts": {
@@ -14,17 +15,17 @@
     "build": "tsc -p .",
     "precommit": "npm run build"
   },
-  "author": "",
   "license": "MIT",
   "devDependencies": {
-    "chai": "^3.5.0",
-    "mocha": "^2.5.3",
-    "rimraf": "^2.5.4",
-    "ts-node": "^1.2.1",
-    "typescript": "^1.8.10",
-    "typings": "^1.3.2"
+    "chai": "3.5.0",
+    "husky": "0.11.6",
+    "mocha": "2.5.3",
+    "rimraf": "2.5.4",
+    "ts-node": "1.2.1",
+    "typescript": "1.8.10",
+    "typings": "1.3.2"
   },
   "dependencies": {
-    "reflect-metadata": "^0.1.3"
+    "reflect-metadata": "0.1.3"
   }
 }
