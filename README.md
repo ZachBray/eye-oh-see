@@ -1,5 +1,7 @@
 # EyeOhSee
 
+[![Build Status](https://travis-ci.org/ZachBray/eye-oh-see.svg?branch=master)](https://travis-ci.org/ZachBray/eye-oh-see)
+
 EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perform constructor injection. 
 
 ## Features
