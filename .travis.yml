@@ -1,9 +1,10 @@
 language: nodejs
 nodejs:
-- 'stable'
-before_install:
+- '6'
+install:
 - npm i -g typings
 - typings i
+- npm i
 script:
 - npm run build
 deploy:
