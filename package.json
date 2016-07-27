@@ -1,8 +1,17 @@
 {
   "name": "eye-oh-see",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A TypeScript IoC library",
-  "keywords": ["TS", "typescript", "IoC", "DI", "inversion", "control", "dependency", "injection"],
+  "keywords": [
+    "TS",
+    "typescript",
+    "IoC",
+    "DI",
+    "inversion",
+    "control",
+    "dependency",
+    "injection"
+  ],
   "main": "dist/src/Index.js",
   "typings": "dist/src/Index.d.ts",
   "scripts": {
