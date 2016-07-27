@@ -1,8 +1,8 @@
 language: nodejs
 nodejs:
-- '6'
+- "6"
 install:
-- npm i -g typings
+- npm i -g typings tslint
 - typings i
 - npm i
 script:
