@@ -2,7 +2,7 @@ language: node_js
 node_js:
 - "6"
 install:
-- npm i -g typings tslint
+- npm i -g typings tslint typescript
 - typings i
 - npm i
 script:
