@@ -10,7 +10,7 @@ export default class UnitOfWorkParameter {
   }
 
   resolve(container: IContainer): any {
-    return (...args) => {
+    return (...args: any[]) => {
       const childContainer = container.createChild();
       const valueFactory = this.factoryParameter.resolve(childContainer);
       const value = valueFactory(...args);

@@ -15,11 +15,11 @@ enum Quantity {
 
 export default class Registration implements IRegistration {
   public parameters: IParameter[] = [];
-  public disposalFunction;
+  public disposalFunction: (instance: any) => void;
   private resolver: IResolver;
   private isResolving: boolean;
 
-  constructor (public key: string, public factory: (...args) => any) {}
+  constructor (public key: string, public factory: (...args: any[]) => any) {}
 
   public resolveOne(context: IResolutionContext): any {
     return this.resolve(context, Quantity.One);
@@ -45,7 +45,7 @@ export default class Registration implements IRegistration {
     return this;
   }
 
-  public providedInstance(instance) {
+  public providedInstance(instance: any) {
     if (this.resolver != null) {
       throw new Error(`Cannot specify providedInstance resolution strategy alongside other strategies (${this.key})`);
     }
@@ -69,7 +69,7 @@ export default class Registration implements IRegistration {
     return this;
   }
 
-  public disposeBy(disposalFunction) {
+  public disposeBy(disposalFunction: (instance: any) => void) {
     if (this.disposalFunction != null) {
       throw new Error(`Disposal function already specified for ${this.key}`);
     }

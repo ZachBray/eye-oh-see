@@ -4,7 +4,7 @@ export default class FactoryParameter {
   constructor(private paramServices: Function[], private service: Function) {}
 
   resolve(container: IContainer): any {
-    return (...args) => {
+    return (...args: any[]) => {
       if (args.length !== this.paramServices.length) {
         throw new Error('Incorrect number of arguments passed to factory.');
       }

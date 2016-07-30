@@ -67,7 +67,7 @@ var Container = (function () {
     Container.prototype.dispose = function () {
         var _this = this;
         Object.keys(this.children).forEach(function (id) { return _this.children[id].dispose(); });
-        this.children = [];
+        this.children = {};
         this.resources.forEach(function (dispose) { return dispose(); });
         this.resources = [];
         this.registrations = {};

@@ -2,7 +2,7 @@
 /// <reference path="IResolutionContext.ts" />
 
 export default class ProvidedInstanceResolver implements IResolver {
-  constructor(private providedInstance) {}
+  constructor(private providedInstance: any) {}
 
   resolve(context: IResolutionContext) {
     return this.providedInstance;

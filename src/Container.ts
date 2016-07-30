@@ -3,12 +3,14 @@ import 'reflect-metadata';
 import Registration from './registration/Registration';
 import RegistrationMetadata from './attributes/RegistrationMetadata';
 
+type Disposable = () => void;
+
 export default class Container implements IContainer {
   private static nextId = 0;
   public parent: IContainer;
   private registrations: {[key: string]: Registration} = {};
-  private children: {[key: number]: Container} = {};
-  private resources = [];
+  private children: {[key: string]: Container} = {};
+  private resources: Disposable[] = [];
   private id = ++Container.nextId;
 
   constructor(private parentImpl: Container = null) {
@@ -22,7 +24,7 @@ export default class Container implements IContainer {
      return child;
   }
 
-  public register(factory) {
+  public register(factory: any) {
     const metadata = RegistrationMetadata.findOrCreate(factory);
     if (this.registrations[metadata.key] != null) {
       return this.registrations[metadata.key];
@@ -33,7 +35,7 @@ export default class Container implements IContainer {
     return registration;
   }
 
-  public resolve<TService>(service: new (...args) => TService, resolvingContainer: IContainer = this): TService {
+  public resolve<TService>(service: new (...args:any[]) => TService, resolvingContainer: IContainer = this): TService {
     const serviceKey = RegistrationMetadata.findOrCreate(service).key;
     const registration = this.registrations[serviceKey];
     if (registration == null && this.parentImpl == null) {
@@ -48,7 +50,7 @@ export default class Container implements IContainer {
   }
 
   // TODO: Refactor to remove duplication here.
-  public resolveMany<TService>(service: new (...args) => TService, resolvingContainer: IContainer = this): TService[] {
+  public resolveMany<TService>(service: new (...args:any[]) => TService, resolvingContainer: IContainer = this): TService[] {
     const serviceKey = RegistrationMetadata.findOrCreate(service).key;
     const registration = this.registrations[serviceKey];
     if (registration == null && this.parentImpl == null) {
@@ -68,7 +70,7 @@ export default class Container implements IContainer {
 
   public dispose() {
     Object.keys(this.children).forEach(id => this.children[id].dispose());
-    this.children = [];
+    this.children = {};
     this.resources.forEach(dispose => dispose());
     this.resources = [];
     this.registrations = {};

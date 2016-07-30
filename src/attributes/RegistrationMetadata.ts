@@ -9,7 +9,7 @@ export default class RegistrationMetadata {
   public key: string;
   private initializers: ((registration: Registration) => void)[] = [];
 
-  public static findOrCreate(factory): RegistrationMetadata {
+  public static findOrCreate(factory: any): RegistrationMetadata {
     const existingMetadata = <RegistrationMetadata> Reflect.getMetadata(IOC_METADATA_KEY, factory);
     if (existingMetadata != null) {
       return existingMetadata;
@@ -19,7 +19,7 @@ export default class RegistrationMetadata {
     return metadata;
   }
 
-  constructor(public factory) {
+  constructor(public factory: any) {
     this.key = KeyFactory.create(factory);
     this.findDependencies();
   }
@@ -36,7 +36,7 @@ export default class RegistrationMetadata {
     const paramTypes = Reflect.getMetadata('design:paramtypes', this.factory);
     if (paramTypes != null) {
       this.addInitialization((registration: Registration) => {
-        registration.parameters = paramTypes.map(t => new Parameter(t));
+        registration.parameters = paramTypes.map((t: any) => new Parameter(t));
       });
     }
   }

@@ -5,7 +5,7 @@ import InstancePerDependencyResolver from './InstancePerDependencyResolver';
 
 export default class SingleInstanceResolver implements IResolver {
   private hasResolved = false;
-  private resolvedValue;
+  private resolvedValue: any;
   private innerResolver: IResolver;
 
   constructor(private registration: IRegistration) {

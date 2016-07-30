@@ -12,8 +12,8 @@ export default class Container implements IContainer {
     constructor(parentImpl?: Container);
     createChild(): Container;
     register(factory: any): Registration;
-    resolve<TService>(service: new (...args) => TService, resolvingContainer?: IContainer): TService;
-    resolveMany<TService>(service: new (...args) => TService, resolvingContainer?: IContainer): TService[];
+    resolve<TService>(service: new (...args: any[]) => TService, resolvingContainer?: IContainer): TService;
+    resolveMany<TService>(service: new (...args: any[]) => TService, resolvingContainer?: IContainer): TService[];
     registerDisposable(disposable: () => void): void;
     dispose(): void;
 }
