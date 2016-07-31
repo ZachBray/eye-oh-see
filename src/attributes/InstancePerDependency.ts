@@ -1,6 +1,6 @@
 import RegistrationMetadata from './RegistrationMetadata';
 
-export default function SingleInstance(...services: Function[]) {
+export default function InstancePerDependency(...services: Function[]) {
   return function (target: Function) {
     const metadata = RegistrationMetadata.findOrCreate(target);
     metadata.addInitialization(registration => registration.instancePerDependency());
