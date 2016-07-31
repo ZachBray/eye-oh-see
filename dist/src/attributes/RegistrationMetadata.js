@@ -11,7 +11,7 @@ var RegistrationMetadata = (function () {
         this.findDependencies();
     }
     RegistrationMetadata.findOrCreate = function (factory) {
-        var existingMetadata = Reflect.getMetadata(IOC_METADATA_KEY, factory);
+        var existingMetadata = Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
         if (existingMetadata != null) {
             return existingMetadata;
         }
