@@ -10,7 +10,7 @@ export default class RegistrationMetadata {
   private initializers: ((registration: Registration) => void)[] = [];
 
   public static findOrCreate(factory: any): RegistrationMetadata {
-    const existingMetadata = <RegistrationMetadata> Reflect.getMetadata(IOC_METADATA_KEY, factory);
+    const existingMetadata = <RegistrationMetadata> Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
     if (existingMetadata != null) {
       return existingMetadata;
     }
