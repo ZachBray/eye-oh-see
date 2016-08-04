@@ -30,7 +30,7 @@ export default class Container implements IContainer {
       return this.registrations[metadata.key];
     }
     const registration = new Registration(metadata.key, factory);
-    metadata.initializeRegistration(registration);
+    metadata.initializeRegistration(registration, this);
     this.registrations[metadata.key] = registration;
     return registration;
   }

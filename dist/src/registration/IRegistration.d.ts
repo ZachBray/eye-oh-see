@@ -4,4 +4,5 @@ interface IRegistration {
     factory: any;
     disposalFunction: (instance: any) => void;
     providedInstance(instance: any): void;
+    implementedBy(serviceImpl: any): void;
 }

@@ -1,4 +1,5 @@
 "use strict";
+/// <reference path="../IContainer.ts" />
 require('reflect-metadata');
 var Parameter_1 = require('../parameters/Parameter');
 var KeyFactory_1 = require('./KeyFactory');
@@ -19,8 +20,8 @@ var RegistrationMetadata = (function () {
         Reflect.defineMetadata(IOC_METADATA_KEY, metadata, factory);
         return metadata;
     };
-    RegistrationMetadata.prototype.initializeRegistration = function (registration) {
-        this.initializers.forEach(function (init) { return init(registration); });
+    RegistrationMetadata.prototype.initializeRegistration = function (registration, container) {
+        this.initializers.forEach(function (init) { return init(registration, container); });
     };
     RegistrationMetadata.prototype.addInitialization = function (initializer) {
         this.initializers.push(initializer);

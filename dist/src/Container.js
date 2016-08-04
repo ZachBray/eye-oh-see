@@ -26,7 +26,7 @@ var Container = (function () {
             return this.registrations[metadata.key];
         }
         var registration = new Registration_1.default(metadata.key, factory);
-        metadata.initializeRegistration(registration);
+        metadata.initializeRegistration(registration, this);
         this.registrations[metadata.key] = registration;
         return registration;
     };

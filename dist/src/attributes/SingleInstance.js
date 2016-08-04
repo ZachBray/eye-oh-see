@@ -9,8 +9,7 @@ function SingleInstance() {
         var metadata = RegistrationMetadata_1.default.findOrCreate(target);
         metadata.addInitialization(function (registration) { return registration.singleInstance(); });
         services.forEach(function (service) {
-            var serviceMetadata = RegistrationMetadata_1.default.findOrCreate(service);
-            serviceMetadata.addInitialization(function (registration) { return registration.implementedBy(target); });
+            metadata.addInitialization(function (_, container) { return container.register(service).implementedBy(target); });
         });
     };
 }

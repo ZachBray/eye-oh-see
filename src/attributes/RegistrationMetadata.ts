@@ -1,3 +1,4 @@
+/// <reference path="../IContainer.ts" />
 import 'reflect-metadata';
 import Registration from '../registration/Registration';
 import Parameter from '../parameters/Parameter';
@@ -7,7 +8,7 @@ const IOC_METADATA_KEY = 'ioc:metadata';
 
 export default class RegistrationMetadata {
   public key: string;
-  private initializers: ((registration: Registration) => void)[] = [];
+  private initializers: ((registration: Registration, container?: IContainer) => void)[] = [];
 
   public static findOrCreate(factory: any): RegistrationMetadata {
     const existingMetadata = <RegistrationMetadata> Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
@@ -24,11 +25,11 @@ export default class RegistrationMetadata {
     this.findDependencies();
   }
 
-  public initializeRegistration(registration: Registration) {
-    this.initializers.forEach(init => init(registration));
+  public initializeRegistration(registration: Registration, container: IContainer) {
+    this.initializers.forEach(init => init(registration, container));
   }
 
-  public addInitialization(initializer: (register: Registration) => void) {
+  public addInitialization(initializer: (register: Registration, container?: IContainer) => void) {
     this.initializers.push(initializer);
   }
 

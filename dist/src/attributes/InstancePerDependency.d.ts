@@ -1,1 +1,1 @@
-export default function SingleInstance(...services: Function[]): (target: Function) => void;
+export default function InstancePerDependency(...services: Function[]): (target: Function) => void;
