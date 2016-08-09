@@ -181,6 +181,21 @@ describe('Registration via attributes', () => {
     expect(instanceA).to.equal(instanceB);
   });
 
+  it('should resolve an empty array when there are no registrations for a service injected as an array', () => {
+    // Arrange
+    class IAnimal {}
+    @InstancePerDependency()
+    class Zoo {
+      constructor(@ArrayOf(IAnimal) public animals: IAnimal[]) {}
+    }
+    sut.register(IAnimal);
+    sut.register(Zoo);
+    // Act
+    const instance = sut.resolve(Zoo);
+    // Assert
+    expect(instance.animals.length).to.equal(0);
+  });
+
   it('should resolve all registrations for a service when resolving an array', () => {
     // Arrange
     class IAnimal {}

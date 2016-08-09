@@ -8,11 +8,6 @@ import ServiceImplementationResolver from '../resolvers/ServiceImplementationRes
 import ProvidedInstanceResolver from '../resolvers/ProvidedInstanceResolver';
 import CombinedResolver from '../resolvers/CombinedResolver';
 
-enum Quantity {
-  One,
-  Many
-}
-
 export default class Registration implements IRegistration {
   public parameters: IParameter[] = [];
   public disposalFunction: (instance: any) => void;
@@ -22,11 +17,21 @@ export default class Registration implements IRegistration {
   constructor (public key: string, public factory: (...args: any[]) => any) {}
 
   public resolveOne(context: IResolutionContext): any {
-    return this.resolve(context, Quantity.One);
+    return this.protectAgainstCycles(() => {
+      if (this.resolver == null) {
+        throw new Error(`No resolution strategy specified for ${this.key}`);
+      }
+      return this.resolver.resolve(context);
+    });
   }
 
   public resolveMany(context: IResolutionContext): any {
-    return this.resolve(context, Quantity.Many);
+    return this.protectAgainstCycles(() => {
+      if (this.resolver == null) {
+        return [];
+      }
+      return this.resolver.resolveMany(context);
+    });
   }
 
   public singleInstance() {
@@ -77,20 +82,13 @@ export default class Registration implements IRegistration {
     return this;
   }
 
-  private resolve(context: IResolutionContext, quantity: Quantity) {
-    if (this.resolver == null) {
-      throw new Error(`No resolution strategy specified for ${this.key}`);
-    }
+  private protectAgainstCycles(action: () => void) {
     try {
       if (this.isResolving) {
-        throw new Error('Loop detected');
+        throw new Error('Cycle detected');
       }
       this.isResolving = true;
-      if (quantity === Quantity.One) {
-        return this.resolver.resolve(context);
-      } else {
-        return this.resolver.resolveMany(context);
-      }
+      return action();
     } catch(error) {
       throw new Error(`When resolving ${this.key}:\n\t${error}`);
     } finally {

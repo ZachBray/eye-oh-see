@@ -18,5 +18,5 @@ export default class Registration implements IRegistration {
     resetResolutionStrategy(): this;
     implementedBy(serviceImpl: Function): this;
     disposeBy(disposalFunction: (instance: any) => void): this;
-    private resolve(context, quantity);
+    private protectAgainstCycles(action);
 }

@@ -267,6 +267,31 @@ describe('Registration via attributes', function () {
         expect(instanceCount).to.equal(1);
         expect(instanceA).to.equal(instanceB);
     });
+    it('should resolve an empty array when there are no registrations for a service injected as an array', function () {
+        // Arrange
+        var IAnimal = (function () {
+            function IAnimal() {
+            }
+            return IAnimal;
+        }());
+        var Zoo = (function () {
+            function Zoo(animals) {
+                this.animals = animals;
+            }
+            Zoo = __decorate([
+                Index_1.InstancePerDependency(),
+                __param(0, Index_1.ArrayOf(IAnimal)), 
+                __metadata('design:paramtypes', [Array])
+            ], Zoo);
+            return Zoo;
+        }());
+        sut.register(IAnimal);
+        sut.register(Zoo);
+        // Act
+        var instance = sut.resolve(Zoo);
+        // Assert
+        expect(instance.animals.length).to.equal(0);
+    });
     it('should resolve all registrations for a service when resolving an array', function () {
         // Arrange
         var IAnimal = (function () {
