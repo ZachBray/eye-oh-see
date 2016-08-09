@@ -3,7 +3,8 @@
 interface IContainer {
   parent: IContainer;
   instances: { [key: string]: any };
-  createChild(): IContainer;
+  scopeName: string;
+  createChild(scopeName?: string): IContainer;
   resolve(service: Function): any;
   resolveMany(service: Function): any[];
   register(service: Function): IRegistration;

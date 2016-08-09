@@ -3,7 +3,7 @@
 /// <reference path="../resolvers/IResolver.ts" />
 /// <reference path="../resolvers/IResolutionContext.ts" />
 import InstancePerDependencyResolver from '../resolvers/InstancePerDependencyResolver';
-import InstancePerFactoryContainerResolver from '../resolvers/InstancePerFactoryContainerResolver';
+import InstancePerScopeResolver from '../resolvers/InstancePerScopeResolver';
 import SingleInstanceResolver from '../resolvers/SingleInstanceResolver';
 import ServiceImplementationResolver from '../resolvers/ServiceImplementationResolver';
 import ProvidedInstanceResolver from '../resolvers/ProvidedInstanceResolver';
@@ -43,11 +43,11 @@ export default class Registration implements IRegistration {
     return this;
   }
 
-  public instancePerFactoryContainer() {
+  public instancePerScope(scopeName: string) {
     if (this.resolver != null) {
-      throw new Error(`Cannot specify instancePerFactoryContainer resolution strategy alongside other strategies (${this.key})`);
+      throw new Error(`Cannot specify instancePerScope resolution strategy alongside other strategies (${this.key})`);
     }
-    this.resolver = new InstancePerFactoryContainerResolver(this);
+    this.resolver = new InstancePerScopeResolver(scopeName, this);
     return this;
   }
 

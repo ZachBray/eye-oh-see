@@ -14,12 +14,12 @@ export default class Container implements IContainer {
   private resources: Disposable[] = [];
   private id = ++Container.nextId;
 
-  constructor(private parentImpl: Container = null) {
+  constructor(private parentImpl: Container = null, public scopeName?: string) {
     this.parent = parentImpl;
   }
 
-  public createChild() {
-     const child = new Container(this);
+  public createChild(scopeName?: string) {
+     const child = new Container(this, scopeName);
      this.children[child.id] = child;
      child.registerDisposable(() => delete this.children[child.id]);
      return child;

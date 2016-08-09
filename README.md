@@ -21,10 +21,7 @@ EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perf
 - [x] Parameterized child-container/unit-of-work factories - `@UnitOfWork(ParamTypeA, ParamTypeB, OwnedType)`
 - [x] Automatic disposal of container descendants
 - [x] Ability to override attribute registration for testing using container API
-
-### Road map
-
-- [ ] Registration of singleton-in-scope - @InstancePerScope("MyScopeName")
+- [x] Registration of singleton-in-scope - @InstancePerScope("MyScopeName")
 
 
 ### Code snippets
@@ -279,5 +276,51 @@ class MyApplication {
     this.requests[id].dispose();
     ...
   }
+}
+```
+
+#### Scoped instances
+
+```typescript
+const RequestScope = 'A Request';
+
+// Service to be available as a singleton within a scope
+@InstancePerScope(RequestScope)
+class MyService { ... }
+
+// First consumer of the service
+@InstancePerDependency()
+class MyFirstConsumer {
+  constructor(private service: MyService) {}
+  ...
+}
+
+// Second consumer of the service
+@InstancePerDependency()
+class MySecondConsumer {
+  constructor(private service: MyService) {}
+  ...
+}
+
+// Representation of a request or unit of work
+@InstancePerDependency()
+class Request {
+  constructor(private consumer1: MyFirstConsumer, private consumer2: MySecondConsumer) {}
+}
+
+// Application where each request 
+@InstancePerDependency()
+class Application {
+  // Note: we could also unit a @ScopedUnitOfWork(...) decorator here!
+  constructor(@ScopedFactory(RequestScope, Request) private requestFactory: () => Request) {}
+  ...
+  onStartRequest(id) {
+    ...
+    // request created where request[1].consumer1.service === request[1].consumer2.service
+    // but request[1].consumer1.service === request[2].consumer1.service
+    this.requests[id] = this.requestFactory();
+    ...
+  }
+  ...
 }
 ```

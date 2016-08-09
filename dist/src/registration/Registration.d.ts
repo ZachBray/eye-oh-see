@@ -13,6 +13,7 @@ export default class Registration implements IRegistration {
     resolveOne(context: IResolutionContext): any;
     resolveMany(context: IResolutionContext): any;
     singleInstance(): this;
+    instancePerScope(scopeName: string): this;
     instancePerDependency(): this;
     providedInstance(instance: any): void;
     resetResolutionStrategy(): this;

@@ -4,18 +4,20 @@ require('reflect-metadata');
 var Registration_1 = require('./registration/Registration');
 var RegistrationMetadata_1 = require('./attributes/RegistrationMetadata');
 var Container = (function () {
-    function Container(parentImpl) {
+    function Container(parentImpl, scopeName) {
         if (parentImpl === void 0) { parentImpl = null; }
         this.parentImpl = parentImpl;
+        this.scopeName = scopeName;
+        this.instances = {};
         this.registrations = {};
         this.children = {};
         this.resources = [];
         this.id = ++Container.nextId;
         this.parent = parentImpl;
     }
-    Container.prototype.createChild = function () {
+    Container.prototype.createChild = function (scopeName) {
         var _this = this;
-        var child = new Container(this);
+        var child = new Container(this, scopeName);
         this.children[child.id] = child;
         child.registerDisposable(function () { return delete _this.children[child.id]; });
         return child;

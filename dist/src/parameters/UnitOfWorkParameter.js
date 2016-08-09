@@ -3,10 +3,10 @@
 "use strict";
 var FactoryParameter_1 = require('./FactoryParameter');
 var UnitOfWorkParameter = (function () {
-    function UnitOfWorkParameter(paramServices, service) {
+    function UnitOfWorkParameter(paramServices, service, scopeName) {
         this.paramServices = paramServices;
         this.service = service;
-        this.factoryParameter = new FactoryParameter_1.default(paramServices, service);
+        this.factoryParameter = new FactoryParameter_1.default(paramServices, service, scopeName);
     }
     UnitOfWorkParameter.prototype.resolve = function (container) {
         var _this = this;

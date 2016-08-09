@@ -4,6 +4,7 @@
 /// <reference path="../resolvers/IResolver.ts" />
 /// <reference path="../resolvers/IResolutionContext.ts" />
 var InstancePerDependencyResolver_1 = require('../resolvers/InstancePerDependencyResolver');
+var InstancePerScopeResolver_1 = require('../resolvers/InstancePerScopeResolver');
 var SingleInstanceResolver_1 = require('../resolvers/SingleInstanceResolver');
 var ServiceImplementationResolver_1 = require('../resolvers/ServiceImplementationResolver');
 var ProvidedInstanceResolver_1 = require('../resolvers/ProvidedInstanceResolver');
@@ -37,6 +38,13 @@ var Registration = (function () {
             throw new Error("Cannot specify singleInstance resolution strategy alongside other strategies (" + this.key + ")");
         }
         this.resolver = new SingleInstanceResolver_1.default(this);
+        return this;
+    };
+    Registration.prototype.instancePerScope = function (scopeName) {
+        if (this.resolver != null) {
+            throw new Error("Cannot specify instancePerScope resolution strategy alongside other strategies (" + this.key + ")");
+        }
+        this.resolver = new InstancePerScopeResolver_1.default(scopeName, this);
         return this;
     };
     Registration.prototype.instancePerDependency = function () {

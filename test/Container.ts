@@ -1,8 +1,8 @@
 import * as chai from 'chai';
 import {
   Container,
-  SingleInstance, InstancePerDependency, InstancePerFactoryContainer,
-  ArrayOf, Factory, Disposable, UnitOfWork
+  SingleInstance, InstancePerDependency, InstancePerScope,
+  ArrayOf, ScopedFactory, Factory, Disposable, UnitOfWork, ScopedUnitOfWork
 } from '../src/Index';
 const expect = chai.expect;
 
@@ -299,35 +299,122 @@ describe('Registration via attributes', () => {
     expect(instanceCount).to.equal(1);
   });
 
-  it('should respect per factory container registrations when resolving through factories', () => {
+  it('should respect per scope container registrations when resolving through factories', () => {
     // Arrange
     let instanceCount = 0;
-    @InstancePerFactoryContainer()
-    class Baz {
+    const MyScope = 'MyScope';
+    @InstancePerScope(MyScope)
+    class Leaf {
       constructor() {
         ++instanceCount;
       }
     }
     @InstancePerDependency()
-    class Foo {
-      constructor(public a: Baz, public b: Baz) {}
+    class Lv1 {
+      constructor(public a: Leaf, public b: Leaf) {}
     }
     @InstancePerDependency()
-    class Bar {
-      public a: Foo;
-      public b: Foo;
-      constructor(@Factory(Foo) factory: () => Foo) {
+    class Lv2 {
+      public a: Lv1;
+      public b: Lv1;
+      public c: Lv1;
+      constructor(
+        @Factory(Lv1) private lv1Factory: () => Lv1,
+        @ScopedFactory(MyScope, Lv1) private lv1FactoryScoped: () => Lv1) {
+        this.a = lv1Factory();
+        this.b = lv1Factory();
+        this.c = lv1FactoryScoped();
+      }
+    }
+    @InstancePerDependency()
+    class Root {
+      public a: Lv2;
+      public b: Lv2;
+      constructor(@ScopedFactory(MyScope, Lv2) factory: () => Lv2) {
         this.a = factory();
         this.b = factory();
       }
     }
-    sut.register(Baz);
-    sut.register(Foo);
-    sut.register(Bar);
+    sut.register(Leaf);
+    sut.register(Lv1);
+    sut.register(Lv2);
+    sut.register(Root);
     // Act
-    sut.resolve(Bar);
+    sut.resolve(Root);
     // Arrange
-    expect(instanceCount).to.equal(2);
+    expect(instanceCount).to.equal(4);
+    // Details:
+    // a->a->a: instance #1
+    // a->a->b: instance #1
+    // a->b->a: instance #1
+    // a->b->b: instance #1
+    // a->c->a: instance #2
+    // a->c->b: instance #2
+    // b->a->a: instance #3
+    // b->a->b: instance #3
+    // b->b->a: instance #3
+    // b->b->b: instance #3
+    // b->c->a: instance #4
+    // b->c->b: instance #4
+  });
+
+  it('should respect per scope container registrations when resolving units of work', () => {
+    // Arrange
+    let instanceCount = 0;
+    const MyScope = 'MyScope';
+    @InstancePerScope(MyScope)
+    class Leaf {
+      constructor() {
+        ++instanceCount;
+      }
+    }
+    @InstancePerDependency()
+    class Lv1 {
+      constructor(public a: Leaf, public b: Leaf) {}
+    }
+    @InstancePerDependency()
+    class Lv2 {
+      public a: Lv1;
+      public b: Lv1;
+      public c: Lv1;
+      constructor(
+        @UnitOfWork(Lv1) private lv1Factory: () => IUnitOfWork<Lv1>,
+        @ScopedUnitOfWork(MyScope, Lv1) private lv1FactoryScoped: () => IUnitOfWork<Lv1>) {
+        this.a = lv1Factory().value;
+        this.b = lv1Factory().value;
+        this.c = lv1FactoryScoped().value;
+      }
+    }
+    @InstancePerDependency()
+    class Root {
+      public a: Lv2;
+      public b: Lv2;
+      constructor(@ScopedUnitOfWork(MyScope, Lv2) factory: () => IUnitOfWork<Lv2>) {
+        this.a = factory().value;
+        this.b = factory().value;
+      }
+    }
+    sut.register(Leaf);
+    sut.register(Lv1);
+    sut.register(Lv2);
+    sut.register(Root);
+    // Act
+    sut.resolve(Root);
+    // Arrange
+    expect(instanceCount).to.equal(4);
+    // Details:
+    // a->a->a: instance #1
+    // a->a->b: instance #1
+    // a->b->a: instance #1
+    // a->b->b: instance #1
+    // a->c->a: instance #2
+    // a->c->b: instance #2
+    // b->a->a: instance #3
+    // b->a->b: instance #3
+    // b->b->a: instance #3
+    // b->b->b: instance #3
+    // b->c->a: instance #4
+    // b->c->b: instance #4
   });
 
   it('should resolve descendants with arguments provided to factories', () => {

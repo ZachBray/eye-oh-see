@@ -5,8 +5,8 @@ import FactoryParameter from './FactoryParameter';
 
 export default class UnitOfWorkParameter {
   private factoryParameter: IParameter;
-  constructor(private paramServices: Function[], private service: Function) {
-    this.factoryParameter = new FactoryParameter(paramServices, service);
+  constructor(private paramServices: Function[], private service: Function, scopeName?: string) {
+    this.factoryParameter = new FactoryParameter(paramServices, service, scopeName);
   }
 
   resolve(container: IContainer): any {

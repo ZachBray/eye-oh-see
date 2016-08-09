@@ -451,6 +451,156 @@ describe('Registration via attributes', function () {
         // Arrange
         expect(instanceCount).to.equal(1);
     });
+    it('should respect per scope container registrations when resolving through factories', function () {
+        // Arrange
+        var instanceCount = 0;
+        var MyScope = 'MyScope';
+        var Leaf = (function () {
+            function Leaf() {
+                ++instanceCount;
+            }
+            Leaf = __decorate([
+                Index_1.InstancePerScope(MyScope), 
+                __metadata('design:paramtypes', [])
+            ], Leaf);
+            return Leaf;
+        }());
+        var Lv1 = (function () {
+            function Lv1(a, b) {
+                this.a = a;
+                this.b = b;
+            }
+            Lv1 = __decorate([
+                Index_1.InstancePerDependency(), 
+                __metadata('design:paramtypes', [Leaf, Leaf])
+            ], Lv1);
+            return Lv1;
+        }());
+        var Lv2 = (function () {
+            function Lv2(lv1Factory, lv1FactoryScoped) {
+                this.lv1Factory = lv1Factory;
+                this.lv1FactoryScoped = lv1FactoryScoped;
+                this.a = lv1Factory();
+                this.b = lv1Factory();
+                this.c = lv1FactoryScoped();
+            }
+            Lv2 = __decorate([
+                Index_1.InstancePerDependency(),
+                __param(0, Index_1.Factory(Lv1)),
+                __param(1, Index_1.ScopedFactory(MyScope, Lv1)), 
+                __metadata('design:paramtypes', [Function, Function])
+            ], Lv2);
+            return Lv2;
+        }());
+        var Root = (function () {
+            function Root(factory) {
+                this.a = factory();
+                this.b = factory();
+            }
+            Root = __decorate([
+                Index_1.InstancePerDependency(),
+                __param(0, Index_1.ScopedFactory(MyScope, Lv2)), 
+                __metadata('design:paramtypes', [Function])
+            ], Root);
+            return Root;
+        }());
+        sut.register(Leaf);
+        sut.register(Lv1);
+        sut.register(Lv2);
+        sut.register(Root);
+        // Act
+        sut.resolve(Root);
+        // Arrange
+        expect(instanceCount).to.equal(4);
+        // Details:
+        // a->a->a: instance #1
+        // a->a->b: instance #1
+        // a->b->a: instance #1
+        // a->b->b: instance #1
+        // a->c->a: instance #2
+        // a->c->b: instance #2
+        // b->a->a: instance #3
+        // b->a->b: instance #3
+        // b->b->a: instance #3
+        // b->b->b: instance #3
+        // b->c->a: instance #4
+        // b->c->b: instance #4
+    });
+    it('should respect per scope container registrations when resolving units of work', function () {
+        // Arrange
+        var instanceCount = 0;
+        var MyScope = 'MyScope';
+        var Leaf = (function () {
+            function Leaf() {
+                ++instanceCount;
+            }
+            Leaf = __decorate([
+                Index_1.InstancePerScope(MyScope), 
+                __metadata('design:paramtypes', [])
+            ], Leaf);
+            return Leaf;
+        }());
+        var Lv1 = (function () {
+            function Lv1(a, b) {
+                this.a = a;
+                this.b = b;
+            }
+            Lv1 = __decorate([
+                Index_1.InstancePerDependency(), 
+                __metadata('design:paramtypes', [Leaf, Leaf])
+            ], Lv1);
+            return Lv1;
+        }());
+        var Lv2 = (function () {
+            function Lv2(lv1Factory, lv1FactoryScoped) {
+                this.lv1Factory = lv1Factory;
+                this.lv1FactoryScoped = lv1FactoryScoped;
+                this.a = lv1Factory().value;
+                this.b = lv1Factory().value;
+                this.c = lv1FactoryScoped().value;
+            }
+            Lv2 = __decorate([
+                Index_1.InstancePerDependency(),
+                __param(0, Index_1.UnitOfWork(Lv1)),
+                __param(1, Index_1.ScopedUnitOfWork(MyScope, Lv1)), 
+                __metadata('design:paramtypes', [Function, Function])
+            ], Lv2);
+            return Lv2;
+        }());
+        var Root = (function () {
+            function Root(factory) {
+                this.a = factory().value;
+                this.b = factory().value;
+            }
+            Root = __decorate([
+                Index_1.InstancePerDependency(),
+                __param(0, Index_1.ScopedUnitOfWork(MyScope, Lv2)), 
+                __metadata('design:paramtypes', [Function])
+            ], Root);
+            return Root;
+        }());
+        sut.register(Leaf);
+        sut.register(Lv1);
+        sut.register(Lv2);
+        sut.register(Root);
+        // Act
+        sut.resolve(Root);
+        // Arrange
+        expect(instanceCount).to.equal(4);
+        // Details:
+        // a->a->a: instance #1
+        // a->a->b: instance #1
+        // a->b->a: instance #1
+        // a->b->b: instance #1
+        // a->c->a: instance #2
+        // a->c->b: instance #2
+        // b->a->a: instance #3
+        // b->a->b: instance #3
+        // b->b->a: instance #3
+        // b->b->b: instance #3
+        // b->c->a: instance #4
+        // b->c->b: instance #4
+    });
     it('should resolve descendants with arguments provided to factories', function () {
         // Arrange
         var Color = (function () {
