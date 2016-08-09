@@ -1,5 +1,9 @@
 import * as chai from 'chai';
-import {Container, SingleInstance, InstancePerDependency, ArrayOf, Factory, Disposable, UnitOfWork} from '../src/Index';
+import {
+  Container,
+  SingleInstance, InstancePerDependency, InstancePerFactoryContainer,
+  ArrayOf, Factory, Disposable, UnitOfWork
+} from '../src/Index';
 const expect = chai.expect;
 
 describe('Registration via attributes', () => {
@@ -293,6 +297,37 @@ describe('Registration via attributes', () => {
     sut.resolve(Bar);
     // Arrange
     expect(instanceCount).to.equal(1);
+  });
+
+  it('should respect per factory container registrations when resolving through factories', () => {
+    // Arrange
+    let instanceCount = 0;
+    @InstancePerFactoryContainer()
+    class Baz {
+      constructor() {
+        ++instanceCount;
+      }
+    }
+    @InstancePerDependency()
+    class Foo {
+      constructor(public a: Baz, public b: Baz) {}
+    }
+    @InstancePerDependency()
+    class Bar {
+      public a: Foo;
+      public b: Foo;
+      constructor(@Factory(Foo) factory: () => Foo) {
+        this.a = factory();
+        this.b = factory();
+      }
+    }
+    sut.register(Baz);
+    sut.register(Foo);
+    sut.register(Bar);
+    // Act
+    sut.resolve(Bar);
+    // Arrange
+    expect(instanceCount).to.equal(2);
   });
 
   it('should resolve descendants with arguments provided to factories', () => {

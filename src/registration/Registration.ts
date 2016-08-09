@@ -3,6 +3,7 @@
 /// <reference path="../resolvers/IResolver.ts" />
 /// <reference path="../resolvers/IResolutionContext.ts" />
 import InstancePerDependencyResolver from '../resolvers/InstancePerDependencyResolver';
+import InstancePerFactoryContainerResolver from '../resolvers/InstancePerFactoryContainerResolver';
 import SingleInstanceResolver from '../resolvers/SingleInstanceResolver';
 import ServiceImplementationResolver from '../resolvers/ServiceImplementationResolver';
 import ProvidedInstanceResolver from '../resolvers/ProvidedInstanceResolver';
@@ -39,6 +40,14 @@ export default class Registration implements IRegistration {
       throw new Error(`Cannot specify singleInstance resolution strategy alongside other strategies (${this.key})`);
     }
     this.resolver = new SingleInstanceResolver(this);
+    return this;
+  }
+
+  public instancePerFactoryContainer() {
+    if (this.resolver != null) {
+      throw new Error(`Cannot specify instancePerFactoryContainer resolution strategy alongside other strategies (${this.key})`);
+    }
+    this.resolver = new InstancePerFactoryContainerResolver(this);
     return this;
   }
 

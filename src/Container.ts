@@ -8,6 +8,7 @@ type Disposable = () => void;
 export default class Container implements IContainer {
   private static nextId = 0;
   public parent: IContainer;
+  public instances = {};
   private registrations: {[key: string]: Registration} = {};
   private children: {[key: string]: Container} = {};
   private resources: Disposable[] = [];
