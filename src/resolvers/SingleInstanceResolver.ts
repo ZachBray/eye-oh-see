@@ -4,8 +4,6 @@
 import InstancePerDependencyResolver from './InstancePerDependencyResolver';
 
 export default class SingleInstanceResolver implements IResolver {
-  private hasResolved = false;
-  private resolvedValue: any;
   private innerResolver: IResolver;
 
   constructor(private registration: IRegistration) {
@@ -13,14 +11,18 @@ export default class SingleInstanceResolver implements IResolver {
   }
 
   resolve(context: IResolutionContext) {
-    if (!this.hasResolved) {
-      this.resolvedValue = this.innerResolver.resolve({
-        registeringContainer: context.registeringContainer,
-        resolvingContainer: context.registeringContainer
-      });
-      this.hasResolved = true;
+    const scopedContext = {
+      registeringContainer: context.registeringContainer,
+      resolvingContainer: context.registeringContainer
+    };
+    const containerInstances = scopedContext.resolvingContainer.instances;
+    const existingInstance = containerInstances[this.registration.key];
+    if (existingInstance) {
+      return existingInstance;
     }
-    return this.resolvedValue;
+    const instance = this.innerResolver.resolve(scopedContext);
+    containerInstances[this.registration.key] = instance;
+    return instance;
   }
 
   resolveMany(context: IResolutionContext) {
