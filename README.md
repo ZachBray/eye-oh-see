@@ -91,7 +91,7 @@ modules.forEach(context => {
   const moduleObjects = context.keys().map(context);
   const moduleExports = flatten(moduleObjects.map(moduleObject => Object.keys(moduleObject).map(k => moduleObject[k])));
   const serviceExports = moduleExports.filter(moduleExport => typeof moduleExport === 'function');
-  serviceExports.forEach(export => container.register(export));
+  serviceExports.forEach(serviceExport => container.register(serviceExport));
 });
 
 // Resolution from container can happen from here!
