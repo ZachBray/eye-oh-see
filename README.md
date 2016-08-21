@@ -2,7 +2,142 @@
 
 [![Build Status](https://travis-ci.org/ZachBray/eye-oh-see.svg?branch=master)](https://travis-ci.org/ZachBray/eye-oh-see)
 
-EyeOhSee is an IOC framework. It uses TypeScript attributes and metadata to perform constructor injection. 
+EyeOhSee is an inversion of control (IoC) container for TypeScript. 
+
+It uses TypeScript attributes and metadata to perform constructor injection without relying on error-prone strings.
+
+## Usage
+
+### Install
+
+To install the npm package in your project run the following command:
+
+```bash
+npm install --save eye-oh-see
+```
+
+Typings are included in the npm package.
+
+### Prerequisites
+
+EyeOhSee relies on metadata that the TypeScript compiler generates. The compiler will only generate this metadata if you include the following options in your `tsconfig.json` configuration file:
+
+```json
+{
+  "emitDecoratorMetadata": true,
+  "experimentalDecorators": true
+}
+```
+
+### Basic usage
+
+Decorate your services and implementations as shown in the features section. For example:
+
+```typescript
+import {InstancePerDependency} from 'eye-oh-see';
+
+export abstract class MyService { ... }
+
+@InstancePerDependency(MyService)
+export class ServiceImpl extends MyService { ... }
+```
+
+Then register service interfaces and implementations with the container. For example:
+
+```typescript
+import {Container} from 'eye-oh-see';
+import {MyService, ServiceImpl} from './SomeFile';
+
+const container = new Container();
+container.register(MyService);
+container.register(ServiceImpl);
+```
+
+Then resolve services from the container. For example:
+
+```typescript
+const service = container.resolve(MyService);
+```
+
+### Advanced usage: Webpack automatic module/directory types registration
+
+Decorate your services and implementations as shown in the features section.
+
+Ensure all your services and implementations are module exports.
+
+Install `webpack-env` typings using the following command:
+
+```bash
+typings install --save --global dt~webpack-env
+```
+
+Register all exported services and implementations from a module/directory using `require.context(...)`:
+
+```typescript
+import {Container} from 'eye-oh-see';
+
+// Module directories
+const modules = [
+  require.context('./my-core-module', true, /^\.\/.*\.tsx?$/),
+  require.context('./my-ui-module', true, /^\.\/.*\.tsx?$/),
+  require.context('./my-connectivity-module', true, /^\.\/.*\.tsx?$/)
+];
+
+// Container
+const container = new Container();
+
+// Registration of module exports in container
+modules.forEach(context => {
+  const moduleObjects = context.keys().map(context);
+  const moduleExports = flatten(moduleObjects.map(moduleObject => Object.keys(moduleObject).map(k => moduleObject[k])));
+  const serviceExports = moduleExports.filter(moduleExport => typeof moduleExport === 'function');
+  serviceExports.forEach(export => container.register(export));
+});
+
+// Resolution from container can happen from here!
+```
+
+### Gotchas
+
+#### Interfaces
+
+TypeScript interfaces are erased and their metadata is not accessible at runtime. This means that all interfaces look the same to EyeOhSee and it is unable to resolve them correctly. We could have added support in EyeOhSee for interfaces using string identifiers to distinguish them; however, we felt this was messy, error-prone and there is an alternative.
+
+_This does not work with EyeOhSee_:
+
+```typescript
+interface ServiceA {
+    a(): void;
+}
+
+interface ServiceB {
+    abstract b(): void;
+}
+
+@SingleInstance(ServiceA, ServiceB)
+class ServiceImpl implements ServiceA, ServiceB {
+  ...
+}
+```
+
+_This does work_:
+
+```typscript
+abstract class ServiceA {
+    abstract a(): void;
+}
+
+abstract class ServiceB {
+    abstract b(): void;
+}
+
+@SingleInstance(ServiceA, ServiceB)
+class ServiceImpl implements ServiceA, ServiceB {
+  ...
+}
+```
+
+TypeScript supports multiple inheritance via `implements` from fully abstract classes. This allows us to keep the same semantics but avoid using error-prone string identifiers.
 
 ## Features
 
