@@ -137,7 +137,7 @@ class ServiceImpl implements ServiceA, ServiceB {
 }
 ```
 
-TypeScript supports multiple inheritance via `implements` from fully abstract classes. This allows us to keep the same semantics but avoid using error-prone string identifiers.
+TypeScript supports multiple inheritance of fully abstract classes via the `implements` keyword. This allows us to keep the same semantics but avoid using error-prone string identifiers.
 
 ## Features
 
