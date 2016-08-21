@@ -122,7 +122,7 @@ class ServiceImpl implements ServiceA, ServiceB {
 
 _This does work_:
 
-```typscript
+```typescript
 abstract class ServiceA {
     abstract a(): void;
 }
