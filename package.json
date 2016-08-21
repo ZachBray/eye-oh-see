@@ -1,16 +1,26 @@
 {
   "name": "eye-oh-see",
   "version": "0.4.1",
-  "description": "A TypeScript IoC library",
+  "author": "Zach Bray <zachbray@googlemail.com>",
+  "description": "An inversion of control container for JavaScript and TypeScript applications that uses decorators for registration.",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ZachBray/eye-oh-see.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ZachBray/eye-oh-see/issues"
+  },
   "keywords": [
-    "TS",
+    "ioc",
+    "di",
+    "javascript",
     "typescript",
-    "IoC",
-    "DI",
-    "inversion",
-    "control",
-    "dependency",
-    "injection"
+    "node",
+    "dependency injection",
+    "constructor injection",
+    "dependency inversion",
+    "inversion of control",
+    "inversion of control container"
   ],
   "main": "dist/src/Index.js",
   "typings": "dist/src/Index.d.ts",
