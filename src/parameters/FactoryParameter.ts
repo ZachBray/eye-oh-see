@@ -1,5 +1,4 @@
 /// <reference path="../IContainer.ts" />
-
 export default class FactoryParameter {
   constructor(private paramServices: Function[], private service: Function, private scopeName?: string) {}
 
@@ -11,7 +10,7 @@ export default class FactoryParameter {
       const child = container.createChild(this.scopeName);
       args.forEach((arg, i) => {
         const paramService = this.paramServices[i];
-        child.register(paramService).providedInstance(arg);
+        child.register(paramService).resetResolutionStrategy().providedInstance(arg);
       });
       return child.resolve(this.service);
     };

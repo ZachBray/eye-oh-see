@@ -5,6 +5,7 @@ interface IRegistration {
   factory: any;
   key: string;
   disposalFunction: (instance: any) => void;
+  resetResolutionStrategy(): IRegistration;
   providedInstance(instance: any): void;
   implementedBy(serviceImpl: any): void;
 }

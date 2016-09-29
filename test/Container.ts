@@ -267,7 +267,7 @@ describe('Registration via attributes', () => {
     sut.register(Bar);
     // Act
     const instance = sut.resolve(Bar);
-    // Arrange
+    // Assert
     expect(instance.a instanceof Foo).to.be.true;
     expect(instance.b instanceof Foo).to.be.true;
     expect(instance.a === instance.b).to.be.false;
@@ -295,7 +295,7 @@ describe('Registration via attributes', () => {
     sut.register(Bar);
     // Act
     sut.resolve(Bar);
-    // Arrange
+    // Assert
     expect(instanceCount).to.equal(1);
   });
 
@@ -341,7 +341,7 @@ describe('Registration via attributes', () => {
     sut.register(Root);
     // Act
     sut.resolve(Root);
-    // Arrange
+    // Assert
     expect(instanceCount).to.equal(4);
     // Details:
     // a->a->a: instance #1
@@ -400,7 +400,7 @@ describe('Registration via attributes', () => {
     sut.register(Root);
     // Act
     sut.resolve(Root);
-    // Arrange
+    // Assert
     expect(instanceCount).to.equal(4);
     // Details:
     // a->a->a: instance #1
@@ -445,10 +445,30 @@ describe('Registration via attributes', () => {
     sut.register(Robot);
     // Act
     const instance = sut.resolve(Robot);
-    // Arrange
+    // Assert
     expect(instance.left.knee.color).to.equal(Color.Red);
     expect(instance.right.knee.color).to.equal(Color.Green);
     expect(instance.left.knee.color).to.not.equal(instance.right.knee.color);
+  });
+
+  it('should override existing registrations when factory is provided with a parameter', () => {
+    // Arrange
+    @InstancePerDependency()
+    class Param { }
+    @InstancePerDependency()
+    class Config { }
+    @InstancePerDependency()
+    class App {
+      public config: Config;
+      constructor(@Factory(Param, Config) factory: (param: Param) => Config) {
+        this.config = factory(new Param());
+      }
+    }
+    sut.register(Param); // Param exists as a transient in the global scope
+    sut.register(Config);
+    sut.register(App); // But it is also provided via a factory here
+    // Act + Assert (no throw)
+    sut.resolve(App);
   });
 
   it('should dispose of transient resources when the container is disposed', () => {
@@ -466,7 +486,7 @@ describe('Registration via attributes', () => {
     sut.resolve(Foo);
     // Act
     sut.dispose();
-    // Arrange
+    // Assert
     expect(disposeCount).to.equal(2);
   });
 
@@ -485,7 +505,7 @@ describe('Registration via attributes', () => {
     sut.resolve(Foo);
     // Act
     sut.dispose();
-    // Arrange
+    // Assert
     expect(disposeCount).to.equal(1);
   });
 
@@ -514,7 +534,7 @@ describe('Registration via attributes', () => {
     factory.create();
     // Act
     sut.dispose();
-    // Arrange
+    // Assert
     expect(disposeCount).to.equal(2);
   });
 
