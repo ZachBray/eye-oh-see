@@ -7,22 +7,20 @@ type Disposable = () => void;
 
 export default class Container implements IContainer {
   private static nextId = 0;
-  public parent: IContainer;
   public instances = {};
   private registrations: {[key: string]: Registration} = {};
-  private children: {[key: string]: Container} = {};
-  private resources: Disposable[] = [];
-  private id = ++Container.nextId;
+  private resources: {[key: string]: Disposable} = {};
+  private removeParentDisposer: () => void = null;
 
   constructor(private parentImpl: Container = null, public scopeName?: string) {
-    this.parent = parentImpl;
+  }
+
+  public get parent() {
+    return this.parentImpl;
   }
 
   public createChild(scopeName?: string) {
-     const child = new Container(this, scopeName);
-     this.children[child.id] = child;
-     child.registerDisposable(() => delete this.children[child.id]);
-     return child;
+     return new Container(this, scopeName);
   }
 
   public register(factory: any) {
@@ -65,15 +63,21 @@ export default class Container implements IContainer {
     });
   }
 
-  public registerDisposable(disposable: () => void) {
-    this.resources.push(disposable);
+  public registerDisposable(disposable: () => void): () => void {
+    if (this.removeParentDisposer == null && this.parentImpl != null) {
+      this.removeParentDisposer = this.parentImpl.registerDisposable(() => this.dispose());
+    }
+    const resourceId = Container.nextId++;
+    this.resources[resourceId] = disposable;
+    return () => delete this.resources[resourceId];
   }
 
   public dispose() {
-    Object.keys(this.children).forEach(id => this.children[id].dispose());
-    this.children = {};
-    this.resources.forEach(dispose => dispose());
-    this.resources = [];
+    if (this.removeParentDisposer != null) {
+      this.removeParentDisposer();
+    }
+    Object.keys(this.resources).forEach(resourceKey => this.resources[resourceKey]());
+    this.resources = {};
     this.registrations = {};
   }
 }
