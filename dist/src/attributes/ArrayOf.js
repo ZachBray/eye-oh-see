@@ -1,6 +1,6 @@
 "use strict";
-var RegistrationMetadata_1 = require('./RegistrationMetadata');
-var ArrayParameter_1 = require('../parameters/ArrayParameter');
+var RegistrationMetadata_1 = require("./RegistrationMetadata");
+var ArrayParameter_1 = require("../parameters/ArrayParameter");
 function ArrayOf(service) {
     return function (target, key, index) {
         var metadata = RegistrationMetadata_1.default.findOrCreate(target);

@@ -1,7 +1,7 @@
 /// <reference path="IResolver.ts" />
 /// <reference path="IResolutionContext.ts" />
 "use strict";
-var InstancePerDependencyResolver_1 = require('./InstancePerDependencyResolver');
+var InstancePerDependencyResolver_1 = require("./InstancePerDependencyResolver");
 var InstancePerScopeResolver = (function () {
     function InstancePerScopeResolver(scopeName, registration) {
         this.scopeName = scopeName;

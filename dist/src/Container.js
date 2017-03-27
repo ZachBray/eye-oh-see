@@ -1,8 +1,8 @@
 "use strict";
 /// <reference path="IContainer.ts" />
-require('reflect-metadata');
-var Registration_1 = require('./registration/Registration');
-var RegistrationMetadata_1 = require('./attributes/RegistrationMetadata');
+require("reflect-metadata");
+var Registration_1 = require("./registration/Registration");
+var RegistrationMetadata_1 = require("./attributes/RegistrationMetadata");
 var Container = (function () {
     function Container(parentImpl, scopeName) {
         if (parentImpl === void 0) { parentImpl = null; }
@@ -10,17 +10,18 @@ var Container = (function () {
         this.scopeName = scopeName;
         this.instances = {};
         this.registrations = {};
-        this.children = {};
-        this.resources = [];
-        this.id = ++Container.nextId;
-        this.parent = parentImpl;
+        this.resources = {};
+        this.removeParentDisposer = null;
     }
+    Object.defineProperty(Container.prototype, "parent", {
+        get: function () {
+            return this.parentImpl;
+        },
+        enumerable: true,
+        configurable: true
+    });
     Container.prototype.createChild = function (scopeName) {
-        var _this = this;
-        var child = new Container(this, scopeName);
-        this.children[child.id] = child;
-        child.registerDisposable(function () { return delete _this.children[child.id]; });
-        return child;
+        return new Container(this, scopeName);
     };
     Container.prototype.register = function (factory) {
         var metadata = RegistrationMetadata_1.default.findOrCreate(factory);
@@ -64,18 +65,25 @@ var Container = (function () {
         });
     };
     Container.prototype.registerDisposable = function (disposable) {
-        this.resources.push(disposable);
+        var _this = this;
+        if (this.removeParentDisposer == null && this.parentImpl != null) {
+            this.removeParentDisposer = this.parentImpl.registerDisposable(function () { return _this.dispose(); });
+        }
+        var resourceId = Container.nextId++;
+        this.resources[resourceId] = disposable;
+        return function () { return delete _this.resources[resourceId]; };
     };
     Container.prototype.dispose = function () {
         var _this = this;
-        Object.keys(this.children).forEach(function (id) { return _this.children[id].dispose(); });
-        this.children = {};
-        this.resources.forEach(function (dispose) { return dispose(); });
-        this.resources = [];
+        if (this.removeParentDisposer != null) {
+            this.removeParentDisposer();
+        }
+        Object.keys(this.resources).forEach(function (resourceKey) { return _this.resources[resourceKey](); });
+        this.resources = {};
         this.registrations = {};
     };
-    Container.nextId = 0;
     return Container;
 }());
+Container.nextId = 0;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Container;

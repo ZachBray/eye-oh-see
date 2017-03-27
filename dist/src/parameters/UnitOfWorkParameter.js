@@ -1,7 +1,7 @@
 /// <reference path="../IContainer.ts" />
 /// <reference path="IParameter.ts" />
 "use strict";
-var FactoryParameter_1 = require('./FactoryParameter');
+var FactoryParameter_1 = require("./FactoryParameter");
 var UnitOfWorkParameter = (function () {
     function UnitOfWorkParameter(paramServices, service, scopeName) {
         this.paramServices = paramServices;
@@ -13,7 +13,7 @@ var UnitOfWorkParameter = (function () {
         return function () {
             var args = [];
             for (var _i = 0; _i < arguments.length; _i++) {
-                args[_i - 0] = arguments[_i];
+                args[_i] = arguments[_i];
             }
             var childContainer = container.createChild();
             var valueFactory = _this.factoryParameter.resolve(childContainer);

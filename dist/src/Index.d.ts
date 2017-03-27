@@ -8,3 +8,4 @@ export { default as Factory } from './attributes/Factory';
 export { default as ScopedFactory } from './attributes/ScopedFactory';
 export { default as UnitOfWork } from './attributes/UnitOfWork';
 export { default as ScopedUnitOfWork } from './attributes/ScopedUnitOfWork';
+export declare function hasRegistrationAnnotation(factory: any): boolean;

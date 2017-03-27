@@ -11,8 +11,8 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-var chai = require('chai');
-var Index_1 = require('../src/Index');
+var chai = require("chai");
+var Index_1 = require("../src/Index");
 var expect = chai.expect;
 describe('Registration via attributes', function () {
     var sut;
@@ -26,12 +26,12 @@ describe('Registration via attributes', function () {
             function Foo() {
                 ++instanceCount;
             }
-            Foo = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [])
+        ], Foo);
         sut.register(Foo);
         // Act
         var instance = sut.resolve(Foo);
@@ -46,12 +46,12 @@ describe('Registration via attributes', function () {
             function Foo() {
                 ++instanceCount;
             }
-            Foo = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [])
+        ], Foo);
         // Act
         sut.register(Foo);
         var instanceA = sut.resolve(Foo);
@@ -72,12 +72,11 @@ describe('Registration via attributes', function () {
         var Dog = (function () {
             function Dog() {
             }
-            Dog = __decorate([
-                Index_1.InstancePerDependency(IAnimal), 
-                __metadata('design:paramtypes', [])
-            ], Dog);
             return Dog;
         }());
+        Dog = __decorate([
+            Index_1.InstancePerDependency(IAnimal)
+        ], Dog);
         sut.register(IAnimal);
         sut.register(Dog);
         // Arrange
@@ -100,12 +99,11 @@ describe('Registration via attributes', function () {
         var Dog = (function () {
             function Dog() {
             }
-            Dog = __decorate([
-                Index_1.InstancePerDependency(IAnimal, IPet), 
-                __metadata('design:paramtypes', [])
-            ], Dog);
             return Dog;
         }());
+        Dog = __decorate([
+            Index_1.InstancePerDependency(IAnimal, IPet)
+        ], Dog);
         sut.register(IAnimal);
         sut.register(IPet);
         sut.register(Dog);
@@ -123,12 +121,12 @@ describe('Registration via attributes', function () {
             function Foo() {
                 ++instanceCount;
             }
-            Foo = __decorate([
-                Index_1.SingleInstance(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.SingleInstance(),
+            __metadata("design:paramtypes", [])
+        ], Foo);
         sut.register(Foo);
         // Act
         var instanceA = sut.resolve(Foo);
@@ -154,12 +152,11 @@ describe('Registration via attributes', function () {
         var Dog = (function () {
             function Dog() {
             }
-            Dog = __decorate([
-                Index_1.SingleInstance(IAnimal, IPet), 
-                __metadata('design:paramtypes', [])
-            ], Dog);
             return Dog;
         }());
+        Dog = __decorate([
+            Index_1.SingleInstance(IAnimal, IPet)
+        ], Dog);
         sut.register(IAnimal);
         sut.register(IPet);
         sut.register(Dog);
@@ -176,22 +173,21 @@ describe('Registration via attributes', function () {
         var Bar = (function () {
             function Bar() {
             }
-            Bar = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [])
-            ], Bar);
             return Bar;
         }());
+        Bar = __decorate([
+            Index_1.InstancePerDependency()
+        ], Bar);
         var Foo = (function () {
             function Foo(bar) {
                 this.bar = bar;
             }
-            Foo = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [Bar])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Bar])
+        ], Foo);
         sut.register(Bar);
         sut.register(Foo);
         // Act
@@ -208,33 +204,33 @@ describe('Registration via attributes', function () {
             function Bar() {
                 ++barInstanceCount;
             }
-            Bar = __decorate([
-                Index_1.SingleInstance(), 
-                __metadata('design:paramtypes', [])
-            ], Bar);
             return Bar;
         }());
+        Bar = __decorate([
+            Index_1.SingleInstance(),
+            __metadata("design:paramtypes", [])
+        ], Bar);
         var Baz = (function () {
             function Baz() {
                 ++bazInstanceCount;
             }
-            Baz = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [])
-            ], Baz);
             return Baz;
         }());
+        Baz = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [])
+        ], Baz);
         var Foo = (function () {
             function Foo(bar, baz) {
                 this.bar = bar;
                 this.baz = baz;
             }
-            Foo = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [Bar, Baz])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Bar, Baz])
+        ], Foo);
         sut.register(Foo);
         sut.register(Bar);
         sut.register(Baz);
@@ -252,12 +248,12 @@ describe('Registration via attributes', function () {
             function Foo() {
                 ++instanceCount;
             }
-            Foo = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [])
+        ], Foo);
         var instanceA = new Foo();
         sut.register(Foo).resetResolutionStrategy().providedInstance(instanceA);
         // Act
@@ -278,13 +274,13 @@ describe('Registration via attributes', function () {
             function Zoo(animals) {
                 this.animals = animals;
             }
-            Zoo = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.ArrayOf(IAnimal)), 
-                __metadata('design:paramtypes', [Array])
-            ], Zoo);
             return Zoo;
         }());
+        Zoo = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.ArrayOf(IAnimal)),
+            __metadata("design:paramtypes", [Array])
+        ], Zoo);
         sut.register(IAnimal);
         sut.register(Zoo);
         // Act
@@ -302,32 +298,30 @@ describe('Registration via attributes', function () {
         var Dog = (function () {
             function Dog() {
             }
-            Dog = __decorate([
-                Index_1.InstancePerDependency(IAnimal), 
-                __metadata('design:paramtypes', [])
-            ], Dog);
             return Dog;
         }());
+        Dog = __decorate([
+            Index_1.InstancePerDependency(IAnimal)
+        ], Dog);
         var Cat = (function () {
             function Cat() {
             }
-            Cat = __decorate([
-                Index_1.InstancePerDependency(IAnimal), 
-                __metadata('design:paramtypes', [])
-            ], Cat);
             return Cat;
         }());
+        Cat = __decorate([
+            Index_1.InstancePerDependency(IAnimal)
+        ], Cat);
         var Zoo = (function () {
             function Zoo(animals) {
                 this.animals = animals;
             }
-            Zoo = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.ArrayOf(IAnimal)), 
-                __metadata('design:paramtypes', [Array])
-            ], Zoo);
             return Zoo;
         }());
+        Zoo = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.ArrayOf(IAnimal)),
+            __metadata("design:paramtypes", [Array])
+        ], Zoo);
         sut.register(IAnimal);
         sut.register(Dog);
         sut.register(Cat);
@@ -351,32 +345,31 @@ describe('Registration via attributes', function () {
             function Dog() {
                 ++dogInstanceCount;
             }
-            Dog = __decorate([
-                Index_1.SingleInstance(IAnimal), 
-                __metadata('design:paramtypes', [])
-            ], Dog);
             return Dog;
         }());
+        Dog = __decorate([
+            Index_1.SingleInstance(IAnimal),
+            __metadata("design:paramtypes", [])
+        ], Dog);
         var Cat = (function () {
             function Cat() {
             }
-            Cat = __decorate([
-                Index_1.InstancePerDependency(IAnimal), 
-                __metadata('design:paramtypes', [])
-            ], Cat);
             return Cat;
         }());
+        Cat = __decorate([
+            Index_1.InstancePerDependency(IAnimal)
+        ], Cat);
         var Zoo = (function () {
             function Zoo(animals) {
                 this.animals = animals;
             }
-            Zoo = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.ArrayOf(IAnimal)), 
-                __metadata('design:paramtypes', [Array])
-            ], Zoo);
             return Zoo;
         }());
+        Zoo = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.ArrayOf(IAnimal)),
+            __metadata("design:paramtypes", [Array])
+        ], Zoo);
         sut.register(IAnimal);
         sut.register(Dog);
         sut.register(Cat);
@@ -392,29 +385,28 @@ describe('Registration via attributes', function () {
         var Foo = (function () {
             function Foo() {
             }
-            Foo = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency()
+        ], Foo);
         var Bar = (function () {
             function Bar(factory) {
                 this.a = factory();
                 this.b = factory();
             }
-            Bar = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.Factory(Foo)), 
-                __metadata('design:paramtypes', [Function])
-            ], Bar);
             return Bar;
         }());
+        Bar = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.Factory(Foo)),
+            __metadata("design:paramtypes", [Function])
+        ], Bar);
         sut.register(Foo);
         sut.register(Bar);
         // Act
         var instance = sut.resolve(Bar);
-        // Arrange
+        // Assert
         expect(instance.a instanceof Foo).to.be.true;
         expect(instance.b instanceof Foo).to.be.true;
         expect(instance.a === instance.b).to.be.false;
@@ -426,29 +418,29 @@ describe('Registration via attributes', function () {
             function Foo() {
                 ++instanceCount;
             }
-            Foo = __decorate([
-                Index_1.SingleInstance(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.SingleInstance(),
+            __metadata("design:paramtypes", [])
+        ], Foo);
         var Bar = (function () {
             function Bar(factory) {
                 this.a = factory();
                 this.b = factory();
             }
-            Bar = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.Factory(Foo)), 
-                __metadata('design:paramtypes', [Function])
-            ], Bar);
             return Bar;
         }());
+        Bar = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.Factory(Foo)),
+            __metadata("design:paramtypes", [Function])
+        ], Bar);
         sut.register(Foo);
         sut.register(Bar);
         // Act
         sut.resolve(Bar);
-        // Arrange
+        // Assert
         expect(instanceCount).to.equal(1);
     });
     it('should respect per scope container registrations when resolving through factories', function () {
@@ -459,23 +451,23 @@ describe('Registration via attributes', function () {
             function Leaf() {
                 ++instanceCount;
             }
-            Leaf = __decorate([
-                Index_1.InstancePerScope(MyScope), 
-                __metadata('design:paramtypes', [])
-            ], Leaf);
             return Leaf;
         }());
+        Leaf = __decorate([
+            Index_1.InstancePerScope(MyScope),
+            __metadata("design:paramtypes", [])
+        ], Leaf);
         var Lv1 = (function () {
             function Lv1(a, b) {
                 this.a = a;
                 this.b = b;
             }
-            Lv1 = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [Leaf, Leaf])
-            ], Lv1);
             return Lv1;
         }());
+        Lv1 = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Leaf, Leaf])
+        ], Lv1);
         var Lv2 = (function () {
             function Lv2(lv1Factory, lv1FactoryScoped) {
                 this.lv1Factory = lv1Factory;
@@ -484,33 +476,33 @@ describe('Registration via attributes', function () {
                 this.b = lv1Factory();
                 this.c = lv1FactoryScoped();
             }
-            Lv2 = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.Factory(Lv1)),
-                __param(1, Index_1.ScopedFactory(MyScope, Lv1)), 
-                __metadata('design:paramtypes', [Function, Function])
-            ], Lv2);
             return Lv2;
         }());
+        Lv2 = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.Factory(Lv1)),
+            __param(1, Index_1.ScopedFactory(MyScope, Lv1)),
+            __metadata("design:paramtypes", [Function, Function])
+        ], Lv2);
         var Root = (function () {
             function Root(factory) {
                 this.a = factory();
                 this.b = factory();
             }
-            Root = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.ScopedFactory(MyScope, Lv2)), 
-                __metadata('design:paramtypes', [Function])
-            ], Root);
             return Root;
         }());
+        Root = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.ScopedFactory(MyScope, Lv2)),
+            __metadata("design:paramtypes", [Function])
+        ], Root);
         sut.register(Leaf);
         sut.register(Lv1);
         sut.register(Lv2);
         sut.register(Root);
         // Act
         sut.resolve(Root);
-        // Arrange
+        // Assert
         expect(instanceCount).to.equal(4);
         // Details:
         // a->a->a: instance #1
@@ -534,23 +526,23 @@ describe('Registration via attributes', function () {
             function Leaf() {
                 ++instanceCount;
             }
-            Leaf = __decorate([
-                Index_1.InstancePerScope(MyScope), 
-                __metadata('design:paramtypes', [])
-            ], Leaf);
             return Leaf;
         }());
+        Leaf = __decorate([
+            Index_1.InstancePerScope(MyScope),
+            __metadata("design:paramtypes", [])
+        ], Leaf);
         var Lv1 = (function () {
             function Lv1(a, b) {
                 this.a = a;
                 this.b = b;
             }
-            Lv1 = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [Leaf, Leaf])
-            ], Lv1);
             return Lv1;
         }());
+        Lv1 = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Leaf, Leaf])
+        ], Lv1);
         var Lv2 = (function () {
             function Lv2(lv1Factory, lv1FactoryScoped) {
                 this.lv1Factory = lv1Factory;
@@ -559,33 +551,33 @@ describe('Registration via attributes', function () {
                 this.b = lv1Factory().value;
                 this.c = lv1FactoryScoped().value;
             }
-            Lv2 = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.UnitOfWork(Lv1)),
-                __param(1, Index_1.ScopedUnitOfWork(MyScope, Lv1)), 
-                __metadata('design:paramtypes', [Function, Function])
-            ], Lv2);
             return Lv2;
         }());
+        Lv2 = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.UnitOfWork(Lv1)),
+            __param(1, Index_1.ScopedUnitOfWork(MyScope, Lv1)),
+            __metadata("design:paramtypes", [Function, Function])
+        ], Lv2);
         var Root = (function () {
             function Root(factory) {
                 this.a = factory().value;
                 this.b = factory().value;
             }
-            Root = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.ScopedUnitOfWork(MyScope, Lv2)), 
-                __metadata('design:paramtypes', [Function])
-            ], Root);
             return Root;
         }());
+        Root = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.ScopedUnitOfWork(MyScope, Lv2)),
+            __metadata("design:paramtypes", [Function])
+        ], Root);
         sut.register(Leaf);
         sut.register(Lv1);
         sut.register(Lv2);
         sut.register(Root);
         // Act
         sut.resolve(Root);
-        // Arrange
+        // Assert
         expect(instanceCount).to.equal(4);
         // Details:
         // a->a->a: instance #1
@@ -606,51 +598,86 @@ describe('Registration via attributes', function () {
         var Color = (function () {
             function Color() {
             }
-            Color.Red = new Color();
-            Color.Green = new Color();
             return Color;
         }());
+        Color.Red = new Color();
+        Color.Green = new Color();
         var Knee = (function () {
             function Knee(color) {
                 this.color = color;
             }
-            Knee = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [Color])
-            ], Knee);
             return Knee;
         }());
+        Knee = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Color])
+        ], Knee);
         var Leg = (function () {
             function Leg(knee) {
                 this.knee = knee;
             }
-            Leg = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [Knee])
-            ], Leg);
             return Leg;
         }());
+        Leg = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Knee])
+        ], Leg);
         var Robot = (function () {
             function Robot(factory) {
                 this.left = factory(Color.Red);
                 this.right = factory(Color.Green);
             }
-            Robot = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.Factory(Color, Leg)), 
-                __metadata('design:paramtypes', [Function])
-            ], Robot);
             return Robot;
         }());
+        Robot = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.Factory(Color, Leg)),
+            __metadata("design:paramtypes", [Function])
+        ], Robot);
         sut.register(Knee);
         sut.register(Leg);
         sut.register(Robot);
         // Act
         var instance = sut.resolve(Robot);
-        // Arrange
+        // Assert
         expect(instance.left.knee.color).to.equal(Color.Red);
         expect(instance.right.knee.color).to.equal(Color.Green);
         expect(instance.left.knee.color).to.not.equal(instance.right.knee.color);
+    });
+    it('should override existing registrations when factory is provided with a parameter', function () {
+        // Arrange
+        var Param = (function () {
+            function Param() {
+            }
+            return Param;
+        }());
+        Param = __decorate([
+            Index_1.InstancePerDependency()
+        ], Param);
+        var Config = (function () {
+            function Config() {
+            }
+            return Config;
+        }());
+        Config = __decorate([
+            Index_1.InstancePerDependency()
+        ], Config);
+        var App = (function () {
+            function App(factory) {
+                this.config = factory(new Param());
+            }
+            return App;
+        }());
+        App = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.Factory(Param, Config)),
+            __metadata("design:paramtypes", [Function])
+        ], App);
+        sut.register(Param); // Param exists as a transient in the global scope
+        sut.register(Config);
+        sut.register(App); // But it is also provided via a factory here
+        // Act + Assert (no throw)
+        sut.resolve(App);
     });
     it('should dispose of transient resources when the container is disposed', function () {
         // Arrange
@@ -661,19 +688,18 @@ describe('Registration via attributes', function () {
             Foo.prototype.dispose = function () {
                 ++disposeCount;
             };
-            Foo = __decorate([
-                Index_1.InstancePerDependency(),
-                Index_1.Disposable(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency(),
+            Index_1.Disposable()
+        ], Foo);
         sut.register(Foo);
         sut.resolve(Foo);
         sut.resolve(Foo);
         // Act
         sut.dispose();
-        // Arrange
+        // Assert
         expect(disposeCount).to.equal(2);
     });
     it('should dispose of singleton resources when the container is disposed', function () {
@@ -685,19 +711,18 @@ describe('Registration via attributes', function () {
             Foo.prototype.dispose = function () {
                 ++disposeCount;
             };
-            Foo = __decorate([
-                Index_1.SingleInstance(),
-                Index_1.Disposable(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.SingleInstance(),
+            Index_1.Disposable()
+        ], Foo);
         sut.register(Foo);
         sut.resolve(Foo);
         sut.resolve(Foo);
         // Act
         sut.dispose();
-        // Arrange
+        // Assert
         expect(disposeCount).to.equal(1);
     });
     it('should dispose of resources created through factories when the container is disposed', function () {
@@ -709,13 +734,12 @@ describe('Registration via attributes', function () {
             Foo.prototype.dispose = function () {
                 ++disposeCount;
             };
-            Foo = __decorate([
-                Index_1.InstancePerDependency(),
-                Index_1.Disposable(), 
-                __metadata('design:paramtypes', [])
-            ], Foo);
             return Foo;
         }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency(),
+            Index_1.Disposable()
+        ], Foo);
         var FooFactory = (function () {
             function FooFactory(factory) {
                 this.factory = factory;
@@ -723,13 +747,13 @@ describe('Registration via attributes', function () {
             FooFactory.prototype.create = function () {
                 return this.factory();
             };
-            FooFactory = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.Factory(Foo)), 
-                __metadata('design:paramtypes', [Function])
-            ], FooFactory);
             return FooFactory;
         }());
+        FooFactory = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.Factory(Foo)),
+            __metadata("design:paramtypes", [Function])
+        ], FooFactory);
         sut.register(Foo);
         sut.register(FooFactory);
         var factory = sut.resolve(FooFactory);
@@ -737,7 +761,7 @@ describe('Registration via attributes', function () {
         factory.create();
         // Act
         sut.dispose();
-        // Arrange
+        // Assert
         expect(disposeCount).to.equal(2);
     });
     it('should dispose of transitively owned resources when a unit of work is disposed', function () {
@@ -749,24 +773,23 @@ describe('Registration via attributes', function () {
             OwnedResource.prototype.dispose = function () {
                 ++disposeCount;
             };
-            OwnedResource = __decorate([
-                Index_1.InstancePerDependency(),
-                Index_1.Disposable(), 
-                __metadata('design:paramtypes', [])
-            ], OwnedResource);
             return OwnedResource;
         }());
+        OwnedResource = __decorate([
+            Index_1.InstancePerDependency(),
+            Index_1.Disposable()
+        ], OwnedResource);
         var MyWorkManager = (function () {
             function MyWorkManager(workFactory) {
                 this.unitOfWork = workFactory();
             }
-            MyWorkManager = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.UnitOfWork(OwnedResource)), 
-                __metadata('design:paramtypes', [Function])
-            ], MyWorkManager);
             return MyWorkManager;
         }());
+        MyWorkManager = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.UnitOfWork(OwnedResource)),
+            __metadata("design:paramtypes", [Function])
+        ], MyWorkManager);
         sut.register(OwnedResource);
         sut.register(MyWorkManager);
         var instance = sut.resolve(MyWorkManager);
@@ -784,24 +807,23 @@ describe('Registration via attributes', function () {
             NotOwnedResource.prototype.dispose = function () {
                 ++disposeCount;
             };
-            NotOwnedResource = __decorate([
-                Index_1.SingleInstance(),
-                Index_1.Disposable(), 
-                __metadata('design:paramtypes', [])
-            ], NotOwnedResource);
             return NotOwnedResource;
         }());
+        NotOwnedResource = __decorate([
+            Index_1.SingleInstance(),
+            Index_1.Disposable()
+        ], NotOwnedResource);
         var MyWorkManager = (function () {
             function MyWorkManager(workFactory) {
                 this.unitOfWork = workFactory();
             }
-            MyWorkManager = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.UnitOfWork(NotOwnedResource)), 
-                __metadata('design:paramtypes', [Function])
-            ], MyWorkManager);
             return MyWorkManager;
         }());
+        MyWorkManager = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.UnitOfWork(NotOwnedResource)),
+            __metadata("design:paramtypes", [Function])
+        ], MyWorkManager);
         sut.register(NotOwnedResource);
         sut.register(MyWorkManager);
         var instance = sut.resolve(MyWorkManager);
@@ -819,35 +841,34 @@ describe('Registration via attributes', function () {
             OwnedResource.prototype.dispose = function () {
                 ++disposeCount;
             };
-            OwnedResource = __decorate([
-                Index_1.InstancePerDependency(),
-                Index_1.Disposable(), 
-                __metadata('design:paramtypes', [])
-            ], OwnedResource);
             return OwnedResource;
         }());
+        OwnedResource = __decorate([
+            Index_1.InstancePerDependency(),
+            Index_1.Disposable()
+        ], OwnedResource);
         var MyWorkManager = (function () {
             function MyWorkManager(workFactory) {
                 this.unitOfWork = workFactory();
             }
-            MyWorkManager = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.UnitOfWork(OwnedResource)), 
-                __metadata('design:paramtypes', [Function])
-            ], MyWorkManager);
             return MyWorkManager;
         }());
+        MyWorkManager = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.UnitOfWork(OwnedResource)),
+            __metadata("design:paramtypes", [Function])
+        ], MyWorkManager);
         var MyOuterWorkManager = (function () {
             function MyOuterWorkManager(workFactory) {
                 this.unitOfWork = workFactory();
             }
-            MyOuterWorkManager = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.UnitOfWork(MyWorkManager)), 
-                __metadata('design:paramtypes', [Function])
-            ], MyOuterWorkManager);
             return MyOuterWorkManager;
         }());
+        MyOuterWorkManager = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.UnitOfWork(MyWorkManager)),
+            __metadata("design:paramtypes", [Function])
+        ], MyOuterWorkManager);
         sut.register(OwnedResource);
         sut.register(MyWorkManager);
         sut.register(MyOuterWorkManager);
@@ -862,35 +883,67 @@ describe('Registration via attributes', function () {
         var Color = (function () {
             function Color() {
             }
-            Color.Blue = new Color();
             return Color;
         }());
+        Color.Blue = new Color();
         var OwnedResource = (function () {
             function OwnedResource(color) {
                 this.color = color;
             }
-            OwnedResource = __decorate([
-                Index_1.InstancePerDependency(), 
-                __metadata('design:paramtypes', [Color])
-            ], OwnedResource);
             return OwnedResource;
         }());
+        OwnedResource = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Color])
+        ], OwnedResource);
         var MyWorkManager = (function () {
             function MyWorkManager(workFactory) {
                 this.unitOfWork = workFactory(Color.Blue);
             }
-            MyWorkManager = __decorate([
-                Index_1.InstancePerDependency(),
-                __param(0, Index_1.UnitOfWork(Color, OwnedResource)), 
-                __metadata('design:paramtypes', [Function])
-            ], MyWorkManager);
             return MyWorkManager;
         }());
+        MyWorkManager = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.UnitOfWork(Color, OwnedResource)),
+            __metadata("design:paramtypes", [Function])
+        ], MyWorkManager);
         sut.register(OwnedResource);
         sut.register(MyWorkManager);
         // Act
         var instance = sut.resolve(MyWorkManager);
         // Assert
         expect(instance.unitOfWork.value.color).to.equal(Color.Blue);
+    });
+    it('should be possible to determine whether an object is registered via an annotation or not', function () {
+        // Arrange
+        var Foo = (function () {
+            function Foo() {
+            }
+            return Foo;
+        }());
+        Foo = __decorate([
+            Index_1.SingleInstance()
+        ], Foo);
+        var Bar = (function () {
+            function Bar() {
+            }
+            return Bar;
+        }());
+        Bar = __decorate([
+            Index_1.InstancePerDependency()
+        ], Bar);
+        var Baz = (function () {
+            function Baz() {
+            }
+            return Baz;
+        }());
+        // Act
+        var isFooAnnotated = Index_1.hasRegistrationAnnotation(Foo);
+        var isBarAnnotated = Index_1.hasRegistrationAnnotation(Bar);
+        var isBazAnnotated = Index_1.hasRegistrationAnnotation(Baz);
+        // Assert
+        expect(isFooAnnotated).to.be.true;
+        expect(isBarAnnotated).to.be.true;
+        expect(isBazAnnotated).to.be.false;
     });
 });

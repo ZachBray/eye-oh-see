@@ -7,8 +7,8 @@ var KeyFactory = (function () {
         var id = ++KeyFactory.nextId;
         return name + "_" + id;
     };
-    KeyFactory.nextId = 0;
     return KeyFactory;
 }());
+KeyFactory.nextId = 0;
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = KeyFactory;

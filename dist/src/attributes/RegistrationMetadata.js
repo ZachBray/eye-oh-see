@@ -1,9 +1,9 @@
 "use strict";
 /// <reference path="../IContainer.ts" />
-require('reflect-metadata');
-var Parameter_1 = require('../parameters/Parameter');
-var KeyFactory_1 = require('./KeyFactory');
-var IOC_METADATA_KEY = 'ioc:metadata';
+require("reflect-metadata");
+var Parameter_1 = require("../parameters/Parameter");
+var KeyFactory_1 = require("./KeyFactory");
+var IOC_METADATA_KEY = '__eyeohsee:registration:metadata';
 var RegistrationMetadata = (function () {
     function RegistrationMetadata(factory) {
         this.factory = factory;
@@ -11,14 +11,11 @@ var RegistrationMetadata = (function () {
         this.key = KeyFactory_1.default.create(factory);
         this.findDependencies();
     }
+    RegistrationMetadata.hasMetadata = function (factory) {
+        return factory[IOC_METADATA_KEY] != null;
+    };
     RegistrationMetadata.findOrCreate = function (factory) {
-        var existingMetadata = Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
-        if (existingMetadata != null) {
-            return existingMetadata;
-        }
-        var metadata = new RegistrationMetadata(factory);
-        Reflect.defineMetadata(IOC_METADATA_KEY, metadata, factory);
-        return metadata;
+        return factory[IOC_METADATA_KEY] = factory[IOC_METADATA_KEY] || new RegistrationMetadata(factory);
     };
     RegistrationMetadata.prototype.initializeRegistration = function (registration, container) {
         this.initializers.forEach(function (init) { return init(registration, container); });

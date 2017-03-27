@@ -1,6 +1,6 @@
 "use strict";
-var RegistrationMetadata_1 = require('./RegistrationMetadata');
-var FactoryParameter_1 = require('../parameters/FactoryParameter');
+var RegistrationMetadata_1 = require("./RegistrationMetadata");
+var FactoryParameter_1 = require("../parameters/FactoryParameter");
 function ScopedFactory(scopeName) {
     var args = [];
     for (var _i = 1; _i < arguments.length; _i++) {

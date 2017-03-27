@@ -1,6 +1,6 @@
 "use strict";
-var RegistrationMetadata_1 = require('./RegistrationMetadata');
-var UnitOfWorkParameter_1 = require('../parameters/UnitOfWorkParameter');
+var RegistrationMetadata_1 = require("./RegistrationMetadata");
+var UnitOfWorkParameter_1 = require("../parameters/UnitOfWorkParameter");
 function ScopedUnitOfWork(scopeName) {
     var args = [];
     for (var _i = 1; _i < arguments.length; _i++) {

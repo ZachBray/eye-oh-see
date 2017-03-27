@@ -1,5 +1,5 @@
 "use strict";
-var RegistrationMetadata_1 = require('./RegistrationMetadata');
+var RegistrationMetadata_1 = require("./RegistrationMetadata");
 function InstancePerScope(scopeName) {
     var services = [];
     for (var _i = 1; _i < arguments.length; _i++) {

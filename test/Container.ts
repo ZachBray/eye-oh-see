@@ -2,7 +2,8 @@ import * as chai from 'chai';
 import {
   Container,
   SingleInstance, InstancePerDependency, InstancePerScope,
-  ArrayOf, ScopedFactory, Factory, Disposable, UnitOfWork, ScopedUnitOfWork
+  ArrayOf, ScopedFactory, Factory, Disposable, UnitOfWork, ScopedUnitOfWork,
+  hasRegistrationAnnotation
 } from '../src/Index';
 const expect = chai.expect;
 
@@ -646,5 +647,22 @@ describe('Registration via attributes', () => {
     const instance = sut.resolve(MyWorkManager);
     // Assert
     expect(instance.unitOfWork.value.color).to.equal(Color.Blue);
+  });
+
+  it('should be possible to determine whether an object is registered via an annotation or not', () => {
+    // Arrange
+    @SingleInstance()
+    class Foo {}
+    @InstancePerDependency()
+    class Bar {}
+    class Baz {}
+    // Act
+    const isFooAnnotated = hasRegistrationAnnotation(Foo);
+    const isBarAnnotated = hasRegistrationAnnotation(Bar);
+    const isBazAnnotated = hasRegistrationAnnotation(Baz);
+    // Assert
+    expect(isFooAnnotated).to.be.true;
+    expect(isBarAnnotated).to.be.true;
+    expect(isBazAnnotated).to.be.false;
   });
 });

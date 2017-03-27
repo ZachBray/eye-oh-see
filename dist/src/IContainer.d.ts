@@ -4,7 +4,7 @@ interface IContainer {
     instances: {
         [key: string]: any;
     };
-    scopeName: string;
+    scopeName?: string;
     createChild(scopeName?: string): IContainer;
     resolve(service: Function): any;
     resolveMany(service: Function): any[];

@@ -3,12 +3,12 @@
 /// <reference path="../parameters/IParameter.ts" />
 /// <reference path="../resolvers/IResolver.ts" />
 /// <reference path="../resolvers/IResolutionContext.ts" />
-var InstancePerDependencyResolver_1 = require('../resolvers/InstancePerDependencyResolver');
-var InstancePerScopeResolver_1 = require('../resolvers/InstancePerScopeResolver');
-var SingleInstanceResolver_1 = require('../resolvers/SingleInstanceResolver');
-var ServiceImplementationResolver_1 = require('../resolvers/ServiceImplementationResolver');
-var ProvidedInstanceResolver_1 = require('../resolvers/ProvidedInstanceResolver');
-var CombinedResolver_1 = require('../resolvers/CombinedResolver');
+var InstancePerDependencyResolver_1 = require("../resolvers/InstancePerDependencyResolver");
+var InstancePerScopeResolver_1 = require("../resolvers/InstancePerScopeResolver");
+var SingleInstanceResolver_1 = require("../resolvers/SingleInstanceResolver");
+var ServiceImplementationResolver_1 = require("../resolvers/ServiceImplementationResolver");
+var ProvidedInstanceResolver_1 = require("../resolvers/ProvidedInstanceResolver");
+var CombinedResolver_1 = require("../resolvers/CombinedResolver");
 var Registration = (function () {
     function Registration(key, factory) {
         this.key = key;

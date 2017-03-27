@@ -1,9 +1,9 @@
 "use strict";
-var RegistrationMetadata_1 = require('./RegistrationMetadata');
+var RegistrationMetadata_1 = require("./RegistrationMetadata");
 function InstancePerDependency() {
     var services = [];
     for (var _i = 0; _i < arguments.length; _i++) {
-        services[_i - 0] = arguments[_i];
+        services[_i] = arguments[_i];
     }
     return function (target) {
         var metadata = RegistrationMetadata_1.default.findOrCreate(target);

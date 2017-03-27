@@ -1,5 +1,5 @@
 "use strict";
-var RegistrationMetadata_1 = require('./RegistrationMetadata');
+var RegistrationMetadata_1 = require("./RegistrationMetadata");
 function Disposable(dispose) {
     if (dispose === void 0) { dispose = function (instance) { return instance.dispose(); }; }
     return function (target) {
