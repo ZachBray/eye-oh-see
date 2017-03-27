@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/ZachBray/eye-oh-see.svg?branch=master)](https://travis-ci.org/ZachBray/eye-oh-see)
 
-EyeOhSee is an inversion of control (IoC) container for TypeScript. 
+EyeOhSee is an inversion of control (IoC) container for TypeScript.
 
 It uses TypeScript attributes and metadata to perform constructor injection without relying on error-prone strings.
 
@@ -74,7 +74,7 @@ typings install --save --global dt~webpack-env
 Register all exported services and implementations from a module/directory using `require.context(...)`:
 
 ```typescript
-import {Container} from 'eye-oh-see';
+import {Container, hasRegistrationAnnotation} from 'eye-oh-see';
 
 // Module directories
 const modules = [
@@ -90,7 +90,7 @@ const container = new Container();
 modules.forEach(context => {
   const moduleObjects = context.keys().map(context);
   const moduleExports = flatten(moduleObjects.map(moduleObject => Object.keys(moduleObject).map(k => moduleObject[k])));
-  const serviceExports = moduleExports.filter(moduleExport => typeof moduleExport === 'function');
+  const serviceExports = moduleExports.filter(moduleExport => typeof moduleExport === 'function' && hasRegistrationAnnotation(moduleExport));
   serviceExports.forEach(serviceExport => container.register(serviceExport));
 });
 
@@ -288,7 +288,7 @@ class Foot {
 }
 
 // A leg has a foot
-@InstancePerDependency() 
+@InstancePerDependency()
 class Leg {
   constructor(foot: Foot) { ... }
   ...
@@ -443,7 +443,7 @@ class Request {
   constructor(private consumer1: MyFirstConsumer, private consumer2: MySecondConsumer) {}
 }
 
-// Application where each request 
+// Application where each request
 @InstancePerDependency()
 class Application {
   // Note: we could also unit a @ScopedUnitOfWork(...) decorator here!
