@@ -4,18 +4,23 @@ import Registration from '../registration/Registration';
 import Parameter from '../parameters/Parameter';
 import KeyFactory from './KeyFactory';
 
-const IOC_METADATA_KEY = '__eyeohsee:registration:metadata';
+const IOC_METADATA_KEY = 'ioc:metadata';
 
 export default class RegistrationMetadata {
   public key: string;
   private initializers: ((registration: Registration, container?: IContainer) => void)[] = [];
 
   public static hasMetadata(factory: any): boolean {
-    return factory[IOC_METADATA_KEY] != null;
+    return Reflect.hasOwnMetadata(IOC_METADATA_KEY, factory);
   }
 
   public static findOrCreate(factory: any): RegistrationMetadata {
-    return factory[IOC_METADATA_KEY] = factory[IOC_METADATA_KEY] || new RegistrationMetadata(factory);
+    let metadata = Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
+    if (!metadata) {
+      metadata = new RegistrationMetadata(factory);
+      Reflect.defineMetadata(IOC_METADATA_KEY, metadata, factory);
+    }
+    return metadata;
   }
 
   constructor(public factory: any) {

@@ -1,4 +1,9 @@
 "use strict";
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
 var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
     var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
     if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
@@ -945,5 +950,49 @@ describe('Registration via attributes', function () {
         expect(isFooAnnotated).to.be.true;
         expect(isBarAnnotated).to.be.true;
         expect(isBazAnnotated).to.be.false;
+    });
+    it('should be possible to register a type in multiple containers', function () {
+        // Arrange
+        var otherSut = new Index_1.Container();
+        var Foo = (function () {
+            function Foo() {
+            }
+            return Foo;
+        }());
+        Foo = __decorate([
+            Index_1.InstancePerDependency()
+        ], Foo);
+        // Act
+        sut.register(Foo);
+        otherSut.register(Foo);
+        // Assert
+        expect(sut.resolve(Foo)).is.instanceof(Foo);
+        expect(otherSut.resolve(Foo)).is.instanceof(Foo);
+    });
+    it('should ignore base class registrations', function () {
+        // Arrange
+        var Super = (function () {
+            function Super() {
+            }
+            return Super;
+        }());
+        Super = __decorate([
+            Index_1.InstancePerDependency()
+        ], Super);
+        var Foo = (function (_super) {
+            __extends(Foo, _super);
+            function Foo() {
+                return _super !== null && _super.apply(this, arguments) || this;
+            }
+            return Foo;
+        }(Super));
+        Foo = __decorate([
+            Index_1.SingleInstance()
+        ], Foo);
+        // Act
+        sut.register(Super);
+        sut.register(Foo);
+        // Assert
+        expect(sut.resolve(Foo)).equals(sut.resolve(Foo));
     });
 });

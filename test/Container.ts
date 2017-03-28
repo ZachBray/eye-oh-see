@@ -665,4 +665,30 @@ describe('Registration via attributes', () => {
     expect(isBarAnnotated).to.be.true;
     expect(isBazAnnotated).to.be.false;
   });
+
+  it('should be possible to register a type in multiple containers', () => {
+    // Arrange
+    const otherSut = new Container();
+    @InstancePerDependency()
+    class Foo {}
+    // Act
+    sut.register(Foo);
+    otherSut.register(Foo);
+    // Assert
+    expect(sut.resolve(Foo)).is.instanceof(Foo);
+    expect(otherSut.resolve(Foo)).is.instanceof(Foo);
+  });
+
+  it('should ignore base class registrations', () => {
+    // Arrange
+    @InstancePerDependency()
+    abstract class Super {}
+    @SingleInstance()
+    class Foo extends Super {}
+    // Act
+    sut.register(Super);
+    sut.register(Foo);
+    // Assert
+    expect(sut.resolve(Foo)).equals(sut.resolve(Foo));
+  });
 });

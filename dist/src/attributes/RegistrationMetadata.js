@@ -3,7 +3,7 @@
 require("reflect-metadata");
 var Parameter_1 = require("../parameters/Parameter");
 var KeyFactory_1 = require("./KeyFactory");
-var IOC_METADATA_KEY = '__eyeohsee:registration:metadata';
+var IOC_METADATA_KEY = 'ioc:metadata';
 var RegistrationMetadata = (function () {
     function RegistrationMetadata(factory) {
         this.factory = factory;
@@ -12,10 +12,15 @@ var RegistrationMetadata = (function () {
         this.findDependencies();
     }
     RegistrationMetadata.hasMetadata = function (factory) {
-        return factory[IOC_METADATA_KEY] != null;
+        return Reflect.hasOwnMetadata(IOC_METADATA_KEY, factory);
     };
     RegistrationMetadata.findOrCreate = function (factory) {
-        return factory[IOC_METADATA_KEY] = factory[IOC_METADATA_KEY] || new RegistrationMetadata(factory);
+        var metadata = Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
+        if (!metadata) {
+            metadata = new RegistrationMetadata(factory);
+            Reflect.defineMetadata(IOC_METADATA_KEY, metadata, factory);
+        }
+        return metadata;
     };
     RegistrationMetadata.prototype.initializeRegistration = function (registration, container) {
         this.initializers.forEach(function (init) { return init(registration, container); });
