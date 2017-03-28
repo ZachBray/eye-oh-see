@@ -12,15 +12,16 @@ var RegistrationMetadata = (function () {
         this.findDependencies();
     }
     RegistrationMetadata.hasMetadata = function (factory) {
-        return Reflect.hasOwnMetadata(IOC_METADATA_KEY, factory);
+        return factory[IOC_METADATA_KEY] != null;
     };
     RegistrationMetadata.findOrCreate = function (factory) {
-        var metadata = Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
-        if (!metadata) {
-            metadata = new RegistrationMetadata(factory);
-            Reflect.defineMetadata(IOC_METADATA_KEY, metadata, factory);
+        if (!RegistrationMetadata.hasMetadata(factory)) {
+            Object.defineProperty(factory, IOC_METADATA_KEY, {
+                // enumerable is false by default so we shouldn't inherit this property on sub types
+                value: new RegistrationMetadata(factory)
+            });
         }
-        return metadata;
+        return factory[IOC_METADATA_KEY];
     };
     RegistrationMetadata.prototype.initializeRegistration = function (registration, container) {
         this.initializers.forEach(function (init) { return init(registration, container); });

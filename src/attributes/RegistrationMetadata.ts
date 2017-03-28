@@ -11,16 +11,17 @@ export default class RegistrationMetadata {
   private initializers: ((registration: Registration, container?: IContainer) => void)[] = [];
 
   public static hasMetadata(factory: any): boolean {
-    return Reflect.hasOwnMetadata(IOC_METADATA_KEY, factory);
+    return factory[IOC_METADATA_KEY] != null;
   }
 
   public static findOrCreate(factory: any): RegistrationMetadata {
-    let metadata = Reflect.getOwnMetadata(IOC_METADATA_KEY, factory);
-    if (!metadata) {
-      metadata = new RegistrationMetadata(factory);
-      Reflect.defineMetadata(IOC_METADATA_KEY, metadata, factory);
+    if (!RegistrationMetadata.hasMetadata(factory)) {
+      Object.defineProperty(factory, IOC_METADATA_KEY, {
+        // enumerable is false by default so we shouldn't inherit this property on sub types
+        value: new RegistrationMetadata(factory)
+      });
     }
-    return metadata;
+    return factory[IOC_METADATA_KEY];
   }
 
   constructor(public factory: any) {
