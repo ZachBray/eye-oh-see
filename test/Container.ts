@@ -721,4 +721,32 @@ describe('Registration via attributes', () => {
     expect(a.test()).equals(2);
     expect(b.test()).equals(2);
   });
+
+  it('should allow resolution as self when registered as a base type', () => {
+    // Arrange
+    abstract class Super {
+      public test() { return 1; }
+    }
+    @SingleInstance(Super)
+    class Service {
+      public test() { return 2; }
+    }
+    @InstancePerDependency()
+    class Consumer {
+      constructor(@Factory(Service) private factory: () => Service) {
+      }
+
+      public test() {
+        const instance = this.factory();
+        return instance.test();
+      }
+    }
+    // Act
+    sut.register(Service);
+    sut.register(Consumer);
+    const consumer = sut.resolve(Consumer);
+    const result = consumer.test();
+    // Assert
+    expect(result).equals(2);
+  });
 });

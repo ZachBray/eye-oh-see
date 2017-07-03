@@ -1045,4 +1045,44 @@ describe('Registration via attributes', function () {
         expect(b.test()).equals(2);
         var Service_1;
     });
+    it('should allow resolution as self when registered as a base type', function () {
+        // Arrange
+        var Super = (function () {
+            function Super() {
+            }
+            Super.prototype.test = function () { return 1; };
+            return Super;
+        }());
+        var Service = (function () {
+            function Service() {
+            }
+            Service.prototype.test = function () { return 2; };
+            return Service;
+        }());
+        Service = __decorate([
+            Index_1.SingleInstance(Super)
+        ], Service);
+        var Consumer = (function () {
+            function Consumer(factory) {
+                this.factory = factory;
+            }
+            Consumer.prototype.test = function () {
+                var instance = this.factory();
+                return instance.test();
+            };
+            return Consumer;
+        }());
+        Consumer = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.Factory(Service)),
+            __metadata("design:paramtypes", [Function])
+        ], Consumer);
+        // Act
+        sut.register(Service);
+        sut.register(Consumer);
+        var consumer = sut.resolve(Consumer);
+        var result = consumer.test();
+        // Assert
+        expect(result).equals(2);
+    });
 });
