@@ -995,4 +995,54 @@ describe('Registration via attributes', function () {
         // Assert
         expect(sut.resolve(Foo)).equals(sut.resolve(Foo));
     });
+    it('should allow registering a singleton of a base type and itself', function () {
+        // Arrange
+        var Super = (function () {
+            function Super() {
+            }
+            Super.prototype.test = function () { return 1; };
+            return Super;
+        }());
+        var Service = Service_1 = (function () {
+            function Service() {
+            }
+            Service.prototype.test = function () { return 2; };
+            return Service;
+        }());
+        Service = Service_1 = __decorate([
+            Index_1.SingleInstance(Super, Service_1) // NOTE: Registration as self here is not necessary. It will cause a warning.
+        ], Service);
+        var ConsumerA = (function () {
+            function ConsumerA(service) {
+                this.service = service;
+            }
+            ConsumerA.prototype.test = function () { return this.service.test(); };
+            return ConsumerA;
+        }());
+        ConsumerA = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Service])
+        ], ConsumerA);
+        var ConsumerB = (function () {
+            function ConsumerB(service) {
+                this.service = service;
+            }
+            ConsumerB.prototype.test = function () { return this.service.test(); };
+            return ConsumerB;
+        }());
+        ConsumerB = __decorate([
+            Index_1.InstancePerDependency(),
+            __metadata("design:paramtypes", [Super])
+        ], ConsumerB);
+        sut.register(Service);
+        sut.register(ConsumerA);
+        sut.register(ConsumerB);
+        // Act
+        var a = sut.resolve(ConsumerA);
+        var b = sut.resolve(ConsumerB);
+        // Assert
+        expect(a.test()).equals(2);
+        expect(b.test()).equals(2);
+        var Service_1;
+    });
 });

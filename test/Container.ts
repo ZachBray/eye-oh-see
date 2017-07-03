@@ -691,4 +691,34 @@ describe('Registration via attributes', () => {
     // Assert
     expect(sut.resolve(Foo)).equals(sut.resolve(Foo));
   });
+
+  it('should allow registering a singleton of a base type and itself', () => {
+    // Arrange
+    abstract class Super {
+      public test() { return 1; }
+    }
+    @SingleInstance(Super, Service) // NOTE: Registration as self here is not necessary. It will cause a warning.
+    class Service {
+      public test() { return 2; }
+    }
+    @InstancePerDependency()
+    class ConsumerA {
+      constructor(private service: Service) {}
+      public test() { return this.service.test(); }
+    }
+    @InstancePerDependency()
+    class ConsumerB {
+      constructor(private service: Super) {}
+      public test() { return this.service.test(); }
+    }
+    sut.register(Service);
+    sut.register(ConsumerA);
+    sut.register(ConsumerB);
+    // Act
+    const a = sut.resolve(ConsumerA);
+    const b = sut.resolve(ConsumerB);
+    // Assert
+    expect(a.test()).equals(2);
+    expect(b.test()).equals(2);
+  });
 });
