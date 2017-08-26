@@ -761,9 +761,9 @@ describe('Registration via attributes', function () {
         ], FooFactory);
         sut.register(Foo);
         sut.register(FooFactory);
-        var factory = sut.resolve(FooFactory);
-        factory.create();
-        factory.create();
+        var factoryInstance = sut.resolve(FooFactory);
+        factoryInstance.create();
+        factoryInstance.create();
         // Act
         sut.dispose();
         // Assert
@@ -1084,5 +1084,33 @@ describe('Registration via attributes', function () {
         var result = consumer.test();
         // Assert
         expect(result).equals(2);
+    });
+    it('should allow the user to override the parameter type using ParamOf', function () {
+        // Arrange
+        var Service = (function () {
+            function Service() {
+            }
+            return Service;
+        }());
+        Service = __decorate([
+            Index_1.InstancePerDependency()
+        ], Service);
+        var Consumer = (function () {
+            function Consumer(service) {
+                this.service = service;
+            }
+            return Consumer;
+        }());
+        Consumer = __decorate([
+            Index_1.InstancePerDependency(),
+            __param(0, Index_1.ParamOf(Service)),
+            __metadata("design:paramtypes", [Object])
+        ], Consumer);
+        // Act
+        sut.register(Service);
+        sut.register(Consumer);
+        var consumer = sut.resolve(Consumer);
+        // Assert
+        expect(consumer.service instanceof Service).to.be.true;
     });
 });

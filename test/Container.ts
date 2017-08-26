@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import {
   Container,
   SingleInstance, InstancePerDependency, InstancePerScope,
-  ArrayOf, ScopedFactory, Factory, Disposable, UnitOfWork, ScopedUnitOfWork,
+  ParamOf, ArrayOf, ScopedFactory, Factory, Disposable, UnitOfWork, ScopedUnitOfWork,
   hasRegistrationAnnotation
 } from '../src/Index';
 const expect = chai.expect;
@@ -530,9 +530,9 @@ describe('Registration via attributes', () => {
     }
     sut.register(Foo);
     sut.register(FooFactory);
-    const factory = sut.resolve(FooFactory);
-    factory.create();
-    factory.create();
+    const factoryInstance = sut.resolve(FooFactory);
+    factoryInstance.create();
+    factoryInstance.create();
     // Act
     sut.dispose();
     // Assert
@@ -748,5 +748,22 @@ describe('Registration via attributes', () => {
     const result = consumer.test();
     // Assert
     expect(result).equals(2);
+  });
+
+  it('should allow the user to override the parameter type using ParamOf', () => {
+    // Arrange
+    @InstancePerDependency()
+    class Service {
+    }
+    @InstancePerDependency()
+    class Consumer {
+      constructor(@ParamOf(Service) public service: any) {}
+    }
+    // Act
+    sut.register(Service);
+    sut.register(Consumer);
+    const consumer = sut.resolve(Consumer);
+    // Assert
+    expect(consumer.service instanceof Service).to.be.true;
   });
 });
