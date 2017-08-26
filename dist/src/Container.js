@@ -35,21 +35,9 @@ var Container = (function () {
     };
     Container.prototype.resolve = function (service, resolvingContainer) {
         if (resolvingContainer === void 0) { resolvingContainer = this; }
-        var serviceKey = RegistrationMetadata_1.default.findOrCreate(service).key;
-        var registration = this.registrations[serviceKey];
-        if (registration == null && this.parentImpl == null) {
-            throw new Error("No registrations in container for " + serviceKey);
-        }
-        else if (registration == null) {
-            return this.parentImpl.resolve(service, resolvingContainer);
-        }
-        return registration.resolveOne({
-            registeringContainer: this,
-            resolvingContainer: resolvingContainer
-        });
+        return this.resolveAbstract(service, resolvingContainer);
     };
-    // TODO: Refactor to remove duplication here.
-    Container.prototype.resolveMany = function (service, resolvingContainer) {
+    Container.prototype.resolveAbstract = function (service, resolvingContainer) {
         if (resolvingContainer === void 0) { resolvingContainer = this; }
         var serviceKey = RegistrationMetadata_1.default.findOrCreate(service).key;
         var registration = this.registrations[serviceKey];
@@ -57,7 +45,26 @@ var Container = (function () {
             throw new Error("No registrations in container for " + serviceKey);
         }
         else if (registration == null) {
-            return this.parentImpl.resolveMany(service, resolvingContainer);
+            return this.parentImpl.resolveAbstract(service, resolvingContainer);
+        }
+        return registration.resolveOne({
+            registeringContainer: this,
+            resolvingContainer: resolvingContainer
+        });
+    };
+    Container.prototype.resolveMany = function (service, resolvingContainer) {
+        if (resolvingContainer === void 0) { resolvingContainer = this; }
+        return this.resolveManyAbstract(service, resolvingContainer);
+    };
+    Container.prototype.resolveManyAbstract = function (service, resolvingContainer) {
+        if (resolvingContainer === void 0) { resolvingContainer = this; }
+        var serviceKey = RegistrationMetadata_1.default.findOrCreate(service).key;
+        var registration = this.registrations[serviceKey];
+        if (registration == null && this.parentImpl == null) {
+            throw new Error("No registrations in container for " + serviceKey);
+        }
+        else if (registration == null) {
+            return this.parentImpl.resolveManyAbstract(service, resolvingContainer);
         }
         return registration.resolveMany({
             registeringContainer: this,

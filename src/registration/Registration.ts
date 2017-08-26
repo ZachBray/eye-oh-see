@@ -15,7 +15,7 @@ export default class Registration implements IRegistration {
   private resolver: IResolver;
   private isResolving: boolean;
 
-  constructor (public key: string, public factory: (...args: any[]) => any) {}
+  constructor (public key: string, public factory: Function) {}
 
   public resolveOne(context: IResolutionContext): any {
     return this.protectAgainstCycles(() => {

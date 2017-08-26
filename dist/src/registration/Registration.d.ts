@@ -4,12 +4,12 @@
 /// <reference path="../resolvers/IResolutionContext.d.ts" />
 export default class Registration implements IRegistration {
     key: string;
-    factory: (...args: any[]) => any;
+    factory: Function;
     parameters: IParameter[];
     disposalFunction: (instance: any) => void;
     private resolver;
     private isResolving;
-    constructor(key: string, factory: (...args: any[]) => any);
+    constructor(key: string, factory: Function);
     resolveOne(context: IResolutionContext): any;
     resolveMany(context: IResolutionContext): any;
     singleInstance(): this;
