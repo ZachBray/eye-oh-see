@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var RegistrationMetadata_1 = require("./attributes/RegistrationMetadata");
 var Container_1 = require("./Container");
 exports.Container = Container_1.default;

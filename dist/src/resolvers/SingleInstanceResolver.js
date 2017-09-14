@@ -1,6 +1,7 @@
+"use strict";
 /// <reference path="IResolver.ts" />
 /// <reference path="IResolutionContext.ts" />
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var InstancePerDependencyResolver_1 = require("./InstancePerDependencyResolver");
 var SingleInstanceResolver = (function () {
     function SingleInstanceResolver(registration) {
@@ -26,5 +27,4 @@ var SingleInstanceResolver = (function () {
     };
     return SingleInstanceResolver;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SingleInstanceResolver;

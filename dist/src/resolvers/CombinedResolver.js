@@ -1,6 +1,7 @@
+"use strict";
 /// <reference path="IResolver.ts" />
 /// <reference path="IResolutionContext.ts" />
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var CombinedResolver = (function () {
     function CombinedResolver(key, resolvers) {
         this.key = key;
@@ -15,5 +16,4 @@ var CombinedResolver = (function () {
     };
     return CombinedResolver;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = CombinedResolver;

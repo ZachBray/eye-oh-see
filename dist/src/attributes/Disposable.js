@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var RegistrationMetadata_1 = require("./RegistrationMetadata");
 function Disposable(dispose) {
     if (dispose === void 0) { dispose = function (instance) { return instance.dispose(); }; }
@@ -7,5 +8,4 @@ function Disposable(dispose) {
         metadata.addInitialization(function (registration) { return registration.disposeBy(dispose); });
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Disposable;

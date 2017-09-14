@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Guards_1 = require("./Guards");
 var Utils_1 = require("./Utils");
 function InstancePerScope(scopeName) {
@@ -12,5 +13,4 @@ function InstancePerScope(scopeName) {
         Utils_1.registerServices(target, services, function (registration) { return registration.instancePerScope(scopeName); });
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = InstancePerScope;

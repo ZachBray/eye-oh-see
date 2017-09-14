@@ -9,6 +9,7 @@ export { default as ParamOf } from './attributes/ParamOf';
 export { default as ArrayOf } from './attributes/ArrayOf';
 export { default as Factory } from './attributes/Factory';
 export { default as ScopedFactory } from './attributes/ScopedFactory';
+export { IUnitOfWork } from './patterns/IUnitOfWork';
 export { default as UnitOfWork } from './attributes/UnitOfWork';
 export { default as ScopedUnitOfWork } from './attributes/ScopedUnitOfWork';
 

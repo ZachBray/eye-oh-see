@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ScopedUnitOfWork_1 = require("./ScopedUnitOfWork");
 var Guards_1 = require("./Guards");
 function default_1() {
@@ -9,5 +10,4 @@ function default_1() {
     Guards_1.assert('(UnitOfWork) args', args).is.not.empty();
     return ScopedUnitOfWork_1.default.apply(void 0, [null].concat(args));
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = default_1;

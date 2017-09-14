@@ -11,7 +11,7 @@ export default class RegistrationMetadata {
   private initializers: ((registration: Registration, container?: IContainer) => void)[] = [];
 
   public static hasMetadata(factory: any): boolean {
-    return factory[IOC_METADATA_KEY] != null;
+    return factory.hasOwnProperty(IOC_METADATA_KEY);
   }
 
   public static findOrCreate(factory: any): RegistrationMetadata {

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Guards_1 = require("./Guards");
 var Utils_1 = require("./Utils");
 function SingleInstance() {
@@ -11,5 +12,4 @@ function SingleInstance() {
         Utils_1.registerServices(target, services, function (registration) { return registration.singleInstance(); });
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = SingleInstance;

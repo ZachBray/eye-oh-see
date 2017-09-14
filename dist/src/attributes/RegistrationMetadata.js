@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="../IContainer.ts" />
 require("reflect-metadata");
 var Parameter_1 = require("../parameters/Parameter");
@@ -12,7 +13,7 @@ var RegistrationMetadata = (function () {
         this.findDependencies();
     }
     RegistrationMetadata.hasMetadata = function (factory) {
-        return factory[IOC_METADATA_KEY] != null;
+        return factory.hasOwnProperty(IOC_METADATA_KEY);
     };
     RegistrationMetadata.findOrCreate = function (factory) {
         if (!RegistrationMetadata.hasMetadata(factory)) {
@@ -39,5 +40,4 @@ var RegistrationMetadata = (function () {
     };
     return RegistrationMetadata;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = RegistrationMetadata;

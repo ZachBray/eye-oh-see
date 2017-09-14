@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var RegistrationMetadata_1 = require("./RegistrationMetadata");
 var ArrayParameter_1 = require("../parameters/ArrayParameter");
 var Guards_1 = require("./Guards");
@@ -10,5 +11,4 @@ function ArrayOf(service) {
         metadata.addInitialization(function (registration) { return registration.parameters[index] = new ArrayParameter_1.default(service); });
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ArrayOf;

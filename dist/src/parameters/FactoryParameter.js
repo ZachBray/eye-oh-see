@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="../IContainer.ts" />
 var FactoryParameter = (function () {
     function FactoryParameter(paramServices, service, scopeName) {
@@ -26,5 +27,4 @@ var FactoryParameter = (function () {
     };
     return FactoryParameter;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = FactoryParameter;

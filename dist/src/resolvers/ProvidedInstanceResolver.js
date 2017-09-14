@@ -1,6 +1,7 @@
+"use strict";
 /// <reference path="IResolver.ts" />
 /// <reference path="IResolutionContext.ts" />
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ProvidedInstanceResolver = (function () {
     function ProvidedInstanceResolver(providedInstance) {
         this.providedInstance = providedInstance;
@@ -13,5 +14,4 @@ var ProvidedInstanceResolver = (function () {
     };
     return ProvidedInstanceResolver;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ProvidedInstanceResolver;

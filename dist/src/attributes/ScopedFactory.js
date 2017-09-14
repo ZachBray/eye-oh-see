@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var RegistrationMetadata_1 = require("./RegistrationMetadata");
 var FactoryParameter_1 = require("../parameters/FactoryParameter");
 var Guards_1 = require("./Guards");
@@ -20,5 +21,4 @@ function ScopedFactory(scopeName) {
         metadata.addInitialization(function (registration) { return registration.parameters[index] = new FactoryParameter_1.default(params, service, scopeName); });
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ScopedFactory;

@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var RegistrationMetadata_1 = require("./RegistrationMetadata");
 var UnitOfWorkParameter_1 = require("../parameters/UnitOfWorkParameter");
 var Guards_1 = require("./Guards");
@@ -16,5 +17,4 @@ function ScopedUnitOfWork(scopeName) {
         metadata.addInitialization(function (registration) { return registration.parameters[index] = new UnitOfWorkParameter_1.default(params, service, scopeName); });
     };
 }
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ScopedUnitOfWork;

@@ -1,6 +1,7 @@
+"use strict";
 /// <reference path="../IContainer.ts" />
 /// <reference path="IParameter.ts" />
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var FactoryParameter_1 = require("./FactoryParameter");
 var UnitOfWorkParameter = (function () {
     function UnitOfWorkParameter(paramServices, service, scopeName) {
@@ -24,5 +25,4 @@ var UnitOfWorkParameter = (function () {
     };
     return UnitOfWorkParameter;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = UnitOfWorkParameter;

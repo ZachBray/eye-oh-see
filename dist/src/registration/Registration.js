@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="IRegistration.ts" />
 /// <reference path="../parameters/IParameter.ts" />
 /// <reference path="../resolvers/IResolver.ts" />
@@ -101,5 +102,4 @@ var Registration = (function () {
     };
     return Registration;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Registration;

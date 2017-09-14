@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 exports.assert = function (name, value) { return ({
     is: {
         a: {

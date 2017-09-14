@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var RegistrationMetadata_1 = require("./RegistrationMetadata");
 function registerServices(target, services, initializer) {
     var metadata = RegistrationMetadata_1.default.findOrCreate(target);

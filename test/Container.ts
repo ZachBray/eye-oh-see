@@ -2,7 +2,7 @@ import * as chai from 'chai';
 import {
   Container,
   SingleInstance, InstancePerDependency, InstancePerScope,
-  ParamOf, ArrayOf, ScopedFactory, Factory, Disposable, UnitOfWork, ScopedUnitOfWork,
+  ParamOf, ArrayOf, ScopedFactory, Factory, Disposable, IUnitOfWork, UnitOfWork, ScopedUnitOfWork,
   hasRegistrationAnnotation
 } from '../src/Index';
 const expect = chai.expect;

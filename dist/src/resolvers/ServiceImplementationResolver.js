@@ -1,6 +1,7 @@
+"use strict";
 /// <reference path="IResolver.ts" />
 /// <reference path="IResolutionContext.ts" />
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var ServiceImplementationResolver = (function () {
     function ServiceImplementationResolver(serviceImpl) {
         this.serviceImpl = serviceImpl;
@@ -13,5 +14,4 @@ var ServiceImplementationResolver = (function () {
     };
     return ServiceImplementationResolver;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ServiceImplementationResolver;

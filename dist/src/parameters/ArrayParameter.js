@@ -1,5 +1,6 @@
-/// <reference path="../IContainer.ts" />
 "use strict";
+/// <reference path="../IContainer.ts" />
+Object.defineProperty(exports, "__esModule", { value: true });
 var ArrayParameter = (function () {
     function ArrayParameter(service) {
         this.service = service;
@@ -9,5 +10,4 @@ var ArrayParameter = (function () {
     };
     return ArrayParameter;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = ArrayParameter;

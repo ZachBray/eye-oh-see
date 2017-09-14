@@ -1,4 +1,5 @@
 "use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 /// <reference path="IContainer.ts" />
 require("reflect-metadata");
 var Registration_1 = require("./registration/Registration");
@@ -89,8 +90,7 @@ var Container = (function () {
         this.resources = {};
         this.registrations = {};
     };
+    Container.nextId = 0;
     return Container;
 }());
-Container.nextId = 0;
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Container;

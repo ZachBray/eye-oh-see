@@ -1,6 +1,7 @@
+"use strict";
 /// <reference path="IParameter.ts" />
 /// <reference path="../IContainer.ts" />
-"use strict";
+Object.defineProperty(exports, "__esModule", { value: true });
 var Parameter = (function () {
     function Parameter(service) {
         this.service = service;
@@ -10,5 +11,4 @@ var Parameter = (function () {
     };
     return Parameter;
 }());
-Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Parameter;
