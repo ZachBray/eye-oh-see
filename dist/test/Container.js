@@ -1113,4 +1113,55 @@ describe('Registration via attributes', function () {
         // Assert
         expect(consumer.service instanceof Service).to.be.true;
     });
+    it('should allow registration after extends has been called in generated code', function () {
+        // Context:
+        //   When a class extends another in TypeScript the static enumerable properties are copied
+        //   from the super type to the sub type. As we store metadata on the constructor functions
+        //   this can cause issues when registering classes that are defined and extended in another
+        //   module.
+        // Arrange
+        var Service = (function () {
+            function Service() {
+            }
+            return Service;
+        }());
+        function moduleA(container) {
+            var ServiceImplA = (function (_super) {
+                __extends(ServiceImplA, _super);
+                function ServiceImplA() {
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
+                    _this.name = 'a';
+                    return _this;
+                }
+                return ServiceImplA;
+            }(Service));
+            ServiceImplA = __decorate([
+                Index_1.SingleInstance(Service)
+            ], ServiceImplA);
+            container.register(ServiceImplA);
+        }
+        function moduleB(container) {
+            var ServiceImplB = (function (_super) {
+                __extends(ServiceImplB, _super);
+                function ServiceImplB() {
+                    var _this = _super !== null && _super.apply(this, arguments) || this;
+                    _this.name = 'b';
+                    return _this;
+                }
+                return ServiceImplB;
+            }(Service));
+            ServiceImplB = __decorate([
+                Index_1.SingleInstance(Service)
+            ], ServiceImplB);
+            container.register(ServiceImplB);
+        }
+        // Act
+        sut.register(Service);
+        moduleA(sut);
+        moduleB(sut);
+        var impls = sut.resolveManyAbstract(Service);
+        // Assert
+        var names = impls.map(function (impl) { return impl.name; });
+        expect(names).to.deep.equal(['a', 'b']);
+    });
 });

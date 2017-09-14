@@ -766,4 +766,40 @@ describe('Registration via attributes', () => {
     // Assert
     expect(consumer.service instanceof Service).to.be.true;
   });
+
+  it('should allow registration after extends has been called in generated code', () => {
+
+    // Context:
+    //   When a class extends another in TypeScript the static enumerable properties are copied
+    //   from the super type to the sub type. As we store metadata on the constructor functions
+    //   this can cause issues when registering classes that are defined and extended in another
+    //   module.
+
+    // Arrange
+    abstract class Service {
+      abstract get name(): string;
+    }
+    function moduleA(container: Container) {
+      @SingleInstance(Service)
+      class ServiceImplA extends Service {
+        public name = 'a';
+      }
+      container.register(ServiceImplA);
+    }
+    function moduleB(container: Container) {
+      @SingleInstance(Service)
+      class ServiceImplB extends Service {
+        public name = 'b';
+      }
+      container.register(ServiceImplB);
+    }
+    // Act
+    sut.register(Service);
+    moduleA(sut);
+    moduleB(sut);
+    const impls = sut.resolveManyAbstract<Service>(Service);
+    // Assert
+    const names = impls.map(impl => impl.name);
+    expect(names).to.deep.equal(['a', 'b']);
+  });
 });
