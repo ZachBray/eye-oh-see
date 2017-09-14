@@ -1,6 +1,6 @@
 {
   "name": "eye-oh-see",
-  "version": "0.5.4",
+  "version": "0.5.5",
   "author": "Zach Bray <zachbray@googlemail.com>",
   "description": "An inversion of control container for JavaScript and TypeScript applications that uses decorators for registration.",
   "repository": {
